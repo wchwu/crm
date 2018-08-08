@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysFuncMapper" >
+ 
+<!-- 特定的几个缓存 都引用 cn.wchwu.dao.sys.SysMenuMapper -->
+<cache-ref namespace="cn.wchwu.dao.sys.SysMenuMapper"/>
+ 
+ <resultMap id="funcResultMap" type="cn.wchwu.model.sys.SysFunc" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="FUNC_NAME" property="funcName" jdbcType="VARCHAR" />
+    <result column="MENU_ID" property="menuId" jdbcType="VARCHAR" />
+    <result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+    <result column="FUNC_URL_PATH" property="funcUrlPath" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
+    <result column="MEMO" property="memo" jdbcType="VARCHAR" />
+    <result column="LOG_EXPRESS" property="logExpress" jdbcType="VARCHAR" />
+    <result column="LOG_STATUS" property="logStatus" jdbcType="VARCHAR" />
+    <result column="LOG_TYPE" property="logType" jdbcType="VARCHAR" />
+    <result column="SYS_FLAG" property="sysFlag" jdbcType="VARCHAR" />
+</resultMap>
+
+<!-- 新增 功能
+	指定jdbcType的情况：列的值可能为空时
+-->
+<insert id="insertFunc">
+	<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+		select func_nextval('SEQ_SYS_MENU') 
+	</selectKey>
+	insert into SYS_FUNC(ID, MENU_ID, FUNC_URL_PATH, STATUS, MEMO, LOG_EXPRESS, LOG_STATUS, SYS_FLAG,FUNC_NAME,LOG_TYPE) 
+		values(#{id}, 
+			   #{menuId, jdbcType=VARCHAR},
+			   #{funcUrlPath},
+			   #{status, jdbcType=VARCHAR},
+			   #{memo, jdbcType=VARCHAR},
+			   #{logExpress, jdbcType=VARCHAR},
+			   #{logStatus, jdbcType=VARCHAR},
+			   #{sysFlag, jdbcType=VARCHAR},
+			   #{funcName},
+			   #{logType, jdbcType=VARCHAR}
+			  )
+</insert>
+
+<!-- 修改 功能 (sys_flag不允许更新)
+	指定jdbcType的情况：列的值可能为空时
+-->
+<update id="updateFunc" >
+	update SYS_FUNC 
+	 	SET 
+	 		FUNC_URL_PATH = #{funcUrlPath},
+	 		FUNC_NAME = #{funcName},
+	 		STATUS = #{status, jdbcType=VARCHAR},
+	 		MEMO =  #{memo, jdbcType=VARCHAR},
+	 		LOG_EXPRESS =  #{logExpress, jdbcType=VARCHAR},
+	 		LOG_STATUS =  #{logStatus, jdbcType=VARCHAR},
+	 		MENU_ID = #{menuId, jdbcType=VARCHAR},
+	 		LOG_TYPE =  #{logType, jdbcType=VARCHAR}
+	 	where
+			ID = #{id}
+</update>
+
+<!-- 级联删除 功能、角色相关联的功能 -->
+<delete id="deleteFunc">
+	begin
+		delete SYS_FUNC where id = #{id} and sys_flag != '0';
+		delete SYS_ROLE_FUNC where func_id = #{id};
+	end;
+</delete>
+
+<!-- 查询功能 -->
+<select id="queryFunc" resultMap="funcResultMap">
+	select T.ID, T.FUNC_NAME, T.MENU_ID, T.MENU_NAME, T.FUNC_URL_PATH, 
+       T.STATUS, T.MEMO, T.LOG_EXPRESS, T.LOG_STATUS, T.SYS_FLAG ,T.LOG_TYPE from (
+   SELECT T1.ID, T1.FUNC_NAME, T1.MENU_ID, T2.TEXT AS MENU_NAME, T1.FUNC_URL_PATH, 
+       T1.STATUS, T1.MEMO, T1.LOG_EXPRESS, T1.LOG_STATUS, T1.SYS_FLAG ,T1.LOG_TYPE,
+       @rownum:=@rownum+1 AS rownum
+   	FROM (SELECT @rownum:=0) r,SYS_FUNC T1 
+    LEFT JOIN SYS_MENU T2 ON T1.MENU_ID = T2.ID   
+   	<if test="map != null">
+  		<where>
+	  		<if test="map.likeFuncUrlPath != null">
+  				T1.FUNC_URL_PATH like concat('%',#{map.likeFuncUrlPath},'%')
+	  		</if>
+	  		<if test="map.funcUrlPath != null">
+  				AND T1.FUNC_URL_PATH = #{map.funcUrlPath}
+	  		</if>
+	  		<if test="map.likeFuncName != null">
+  				AND T1.FUNC_NAME like concat('%',#{map.likeFuncName},'%')
+	  		</if>
+	  		<if test="map.funcUrlPath != null">
+  				AND T1.FUNC_NAME = #{map.funcName}
+	  		</if>
+	  		<if test="map.memo != null">
+	  			AND T1.memo like concat('%',#{map.memo},'%')
+	  		</if>
+	  		<if test="map.menuId != null">
+	  			AND T1.MENU_ID = #{map.menuId}
+	  		</if>
+	  		<if test="map.sysFlag != null">
+	  			AND T1.SYS_FLAG = #{map.sysFlag}
+	  		</if>
+	  		<if test="map.id != null">
+	  			AND T1.id = #{map.id}
+	  		</if>
+	  		
+	  		<if test="map.status != null">
+	  			AND T1.status = #{map.status}
+	  		</if>
+  		</where>
+  	</if>
+  	) as T 
+  	where 1=1 
+  	<if test="map != null">
+	  	<if test="map.ensureOne != null and map.ensureOne eq 'y'.toString()">
+			AND rownum = 1
+		</if>
+	</if>
+  	ORDER BY T.MENU_ID,T.ID
+</select>
+
+<!-- 新增角色-功能关系 -->
+<insert id="insertRoleFunc">
+	insert into sys_role_func(role_code, func_id) 
+		values(#{roleCode}, 
+			   #{funcId})
+</insert>
+
+<!-- 删除角色-功能关系 -->
+<delete id="deleteRoleFunc">
+	delete SYS_ROLE_FUNC where role_code = #{roleCode}
+</delete>
+
+<select id="queryFuncIdByRoleCode" resultType="java.lang.String">
+    SELECT func_id FROM sys_role_func where role_code = #{roleCode}
+</select>
+
+<!-- 菜单功能树，使用菜单实体作为查询结果载体 -->
+<resultMap id="menuFuncResultMap" type="cn.wchwu.model.sys.SysMenu">
+	<result column="id" property="id" jdbcType="VARCHAR" />
+	<result column="pid" property="pid" jdbcType="VARCHAR" />
+	<result column="text" property="text" jdbcType="VARCHAR" />
+	<result column="icon_Cls" property="iconCls" jdbcType="VARCHAR" />
+</resultMap>
+
+<!-- 查询菜单功能树  -->
+<select id="queryMenuFuncTree" resultMap="menuFuncResultMap">
+	SELECT ID, PID, TEXT, icon_Cls
+	  FROM (
+	  		<!-- 查询叶子菜单 -->
+	  		SELECT id, pid, text, 'ext-icon-bricks' as icon_Cls, rank as sort_field
+	          FROM sys_menu
+	         where status = '0'
+	           and isleaf = 'y'
+	        union all
+	        <!-- 查询非叶子菜单，并且菜单包含有启用的、叶子菜单(也就是过滤那些 空的非叶子菜单) -->
+	        SELECT id, pid, text, 'ext-icon-application' as icon_Cls, rank as sort_field
+	          FROM sys_menu t1
+	         where isleaf = 'n'
+	           and exists
+	         (select null
+	                  from sys_menu t2
+	                 where t2.isleaf = 'y'
+	                   and t2.status = '0'
+	                   and t2.id_seq like '%.' || t1.id || '.%')
+	        union all
+	        <!-- 查询功能表的功能 -->
+	        SELECT id, menu_id, func_name, 'ext-icon-brick' as icon_Cls, cast(id as SIGNED) as sort_field
+	          FROM sys_func
+	         where (menu_id in (SELECT id FROM sys_menu where status = '0') or menu_id is null)
+	           and status = 0) as T
+	 ORDER BY sort_field
+</select>
+</mapper>
+  

@@ -1,0 +1,106 @@
+body, ul, li {
+	padding: 0;
+	margin: 0;
+}
+ul, li {
+	list-style: none;
+}
+body {
+	font: 14px/2 'simsun', "Times New Roman", serif;
+	background: #e6f1fb;
+}
+.wapper {
+	width: 900px;
+	margin: 0 auto;
+}
+a {
+	text-decoration: none;
+	color: #2570b6;
+}
+a:hover {
+	color: #f3981d;
+}
+.container {
+	background: #4a74b5 url(images/loginbg.jpg) 218px 0px no-repeat;
+	height: 350px;
+	width:100%;
+	overflow:hidden;
+}
+.top, .footer {
+	height: 65px;
+	line-height: 40px;
+	font-family: 'Microsoft Yahei';
+}
+.footer {
+	text-align: center;
+	width:100%;
+}
+.clx {
+*zoom:1;
+}
+.clx:after {
+	display: table;
+	clear: both;
+	content: '';
+	height: 0;
+	line-height: 0;
+}
+.fl {
+	float: left;
+	display:inline;
+}
+.fr {
+	float: right;
+	display:inline;
+}
+.gray {
+	color: #999;
+}
+.top .fr {
+	padding-top: 24px;
+	padding-right:220px;
+}
+.logo {
+	/* background: url(images/logo.png) no-repeat; */
+	height: 40px;
+	font-size: 20px;
+	overflow:hidden;
+	width:168px;
+	float:left;
+	display:inline;
+	margin-left:270px;
+	margin-top:20px;
+}
+.content {
+	width: 370px;
+	height: 230px;	
+	background: url(images/bg.png) no-repeat;
+	margin-right:290px;
+	float:right;
+	display:inline;
+	margin-top:72px;
+	overflow:hidden;
+}
+.logintitle strong {
+	cursor: pointer;
+	color: #2570b6
+}
+.logintitle .on {
+	color: #000;
+	line-height:40px;
+	margin-left:18px;
+}
+.content ul {
+	overflow:hidden;
+	width:350px;
+	height:122px;
+}
+.btn {
+	padding: 4px 19px;
+	height: 29px;
+	font: inherit;
+	font-weight: bold;
+}
+div{
+	overflow:block;
+}

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysMenuMapper">
+	
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+	<resultMap id="menuResultMap" type="cn.wchwu.model.sys.SysMenu">
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="pid" property="pid" jdbcType="VARCHAR" />
+		<result column="text" property="text" jdbcType="VARCHAR" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="icon_cls" property="iconCls" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="menu_level" property="menuLevel" jdbcType="INTEGER" />
+		<result column="rank" property="rank" jdbcType="INTEGER" />
+		<result column="open_model" property="openModel" jdbcType="VARCHAR" />
+		<result column="isleaf" property="isleaf" jdbcType="VARCHAR" />
+		<result column="id_seq" property="idSeq" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 查询菜单 -->
+	<select id="querySysMenu" resultMap="menuResultMap">
+	SELECT id,
+		pid,
+		text,
+		url,
+		icon_cls,
+		status,
+		rank,
+		open_model,
+		isleaf,
+		id_seq,
+		menu_level
+	FROM sys_menu a
+		<if test="operatorId != null">
+					, (
+						SELECT
+							getParentLst (group_concat(id)) AS plistid
+						FROM
+							SYS_MENU
+						WHERE
+							URL IN (
+								SELECT
+									func_url_path
+								FROM
+									sys_func
+								WHERE
+									func_url_path IS NOT NULL
+								AND STATUS = '0'
+								AND id IN (
+									SELECT
+										func_id
+									FROM
+										sys_role_func
+									WHERE
+										role_code IN (
+											SELECT
+												role_code
+											FROM
+												sys_operator_role
+											WHERE
+												operator_id = #{operatorId}
+										)
+								)
+							)
+					) b
+		</if>
+		<where>
+			<!-- 异步查询时才指定pid -->
+			<if test="async eq 'y'.toString()"> 
+				<if test="pid == null">
+					pid is null
+				</if>
+				<if test="pid != null">
+					AND pid = #{pid}
+				</if>
+			</if>
+			
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+			
+			<!-- 按操作员查询 树菜单 -->
+			<if test="operatorId != null">
+				and FIND_IN_SET(a.id, b.plistid)
+			</if>
+			
+			<!-- 当qtype不等于all时,只查询status 为0 的数据 -->
+			<if test="qtype neq 'all'.toString()">
+				AND status = 0
+			</if>
+		</where>
+		ORDER BY rank
+	</select>
+	
+	<!-- 新增菜单 -->
+	<insert id="insertSysMenu">
+		<selectKey resultType="java.lang.String" order="BEFORE" keyProperty="id">
+			select func_nextval('SEQ_SYS_MENU') 
+		</selectKey>
+		<bind name="newIdSeq" value="idSeq + id + '.'" />
+		Insert into SYS_MENU (ID,PID,TEXT,URL,ICON_CLS,STATUS,RANK,MENU_LEVEL,OPEN_MODEL,ISLEAF,ID_SEQ) 
+ 		 values (#{id}, 
+ 		 		#{pid, jdbcType=VARCHAR}, 
+ 		 		#{text}, 
+ 		 		#{url, jdbcType=VARCHAR},
+ 		 		#{iconCls, jdbcType=VARCHAR},
+ 		 		#{status, jdbcType=VARCHAR},
+ 		 		#{rank, jdbcType=INTEGER},
+ 		 		#{menuLevel},
+ 		 		#{openModel, jdbcType=VARCHAR},
+ 		 		#{isleaf, jdbcType=VARCHAR},
+ 		 		#{newIdSeq})
+	</insert>
+	
+	<!-- 更新菜单信息 (保存菜单信息：不会更改 MENU_LEVEL、ID_SEQ，这些只会在拖拽菜单时有修改)-->
+	<update id="updateSysMenu">
+		update SYS_MENU 
+			set PID = #{pid, jdbcType=VARCHAR},
+				TEXT = #{text},
+				URL = #{url, jdbcType=VARCHAR},
+				ICON_CLS = #{iconCls, jdbcType=VARCHAR},
+				STATUS = #{status, jdbcType=VARCHAR},
+				RANK = #{rank, jdbcType=INTEGER},
+				OPEN_MODEL = #{openModel, jdbcType=VARCHAR},
+				ISLEAF = #{isleaf, jdbcType=VARCHAR}
+		where id = #{id}
+	</update>
+	
+	<!-- 更新祖先节点菜单状态 -->
+	<update id="updateAncestorStatus">
+		update SYS_MENU 
+			set STATUS = #{status}
+		where id in
+		<foreach item="item" collection="idArrays" open="(" separator="," close=")" >
+			#{item}
+		</foreach>
+		and STATUS != #{status}
+	</update>
+	
+	<!-- 更新子孙节点菜单状态 -->
+	<update id="updateDescendantStatus">
+		<bind name="idSeq" value="'%.' + id + '.%'" />
+		update SYS_MENU 
+			set STATUS = #{status}
+		where ID_SEQ like  #{idSeq}
+			and STATUS != #{status}
+	</update>
+	
+	<!-- 拖拽菜单，更新菜单层级、菜单ID_SEQ(包括子菜单) -->
+	<update id="moveSysMenu">
+	 	<bind name="idSeq" value="'%.' + id + '.%'" />
+	 		<!-- 更新父菜单id、顺序 -->
+	 		update SYS_MENU 
+	 			set
+	 				<if test="chgParent == 0">
+ 						PID = #{pid, jdbcType=VARCHAR},
+ 					</if>
+ 					RANK = #{rank}
+			where ID =  #{id}
+			
+			<!-- 更新层级 -->
+			<if test="chgParent == 0">
+				;
+				<!-- 更新本菜单和子菜单的seq、menu_level -->
+				update SYS_MENU T
+					set 
+						T.MENU_LEVEL = T.MENU_LEVEL + #{toMenuLevel} - #{fromMenuLevel},
+						T.ID_SEQ = CONCAT(#{toIdSeq}, SUBSTR(T.ID_SEQ, LENGTH(#{fromIdSeq})+1)) 
+					where T.ID_SEQ like  #{idSeq}
+			</if>
+	</update>
+	
+	<!-- 删除菜单(级联删除子菜单)、删除对应的功能、删除功能与角色的关系  -->
+	<delete id="deleteMenu">
+		begin
+			<!-- 删除角色功能与角色间 的关系 -->
+			delete SYS_ROLE_FUNC where func_id in(
+				select id as func_id from sys_func where menu_id in(
+					SELECT id as menu_id FROM sys_menu where ID_SEQ like  '%.'||#{id}||'.%'));
+			
+			<!-- 删除菜单对应的功能 -->
+			delete sys_func where menu_id in(
+				SELECT id as menu_id FROM sys_menu where ID_SEQ like  '%.'||#{id}||'.%');
+			
+			<!-- 删除菜单 -->
+			delete sys_menu where ID_SEQ like  '%.'||#{id}||'.%';
+		end;
+	</delete>
+
+</mapper>
+  

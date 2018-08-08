@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- 输出日志到控制台 ConsoleAppender -->
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<param name="Threshold" value="DEBUG" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %-5p [%c{1}] %m%n" />
+		</layout>
+	</appender>
+
+	<!-- debug日志到文件 ，最大10M,保留备份5个 -->
+	<appender name="debug-out" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/crm/debug.log" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss} %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="debug" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- info日志到文件 ，最大10M,保留备份5个 -->
+	<appender name="info-out" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/crm/info.log" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss} %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="info" />
+			<param name="LevelMin" value="info" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- warn日志到文件 ，最大10M,保留备份5个 -->
+	<appender name="warn-out" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/crm/warn.log" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss} %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="warn" />
+			<param name="LevelMin" value="warn" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- error日志到文件 ，最大10M,保留备份5个 -->
+	<appender name="error-out" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/crm/error.log" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss} %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="error" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- mybatis sql执行日志 -->
+	<appender name="sql-out" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${catalina.base}/logs/crm/sql_trace.log" />
+		<param name="MaxFileSize" value="10MB" />
+		<param name="MaxBackupIndex" value="5" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy.MM.dd HH:mm:ss} %c - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="debug" />
+			<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
+
+	<!-- sql日志打印 -->
+	<logger name="druid.sql" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sql-out" />
+		<appender-ref ref="console" />
+		<appender-ref ref="error-out" />
+	</logger>
+	<logger name="druid.sql.DataSource" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sql-out" />
+		<appender-ref ref="console" />
+		<appender-ref ref="error-out" />
+	</logger>
+	<logger name="druid.sql.Connection" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sql-out" />
+		<appender-ref ref="console" />
+		<appender-ref ref="error-out" />
+	</logger>
+	<logger name="druid.sql.Statement" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sql-out" />
+		<appender-ref ref="console" />
+		<appender-ref ref="error-out" />
+	</logger>
+	<logger name="druid.sql.ResultSet" additivity="false" >
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+		<appender-ref ref="sql-out" />
+		<appender-ref ref="error-out" />
+	</logger> 
+	<logger name="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+		<appender-ref ref="warn-out" />
+		<appender-ref ref="error-out" />
+	</logger>
+
+	<root>
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+		<appender-ref ref="debug-out" />
+		<appender-ref ref="info-out" />
+		<appender-ref ref="warn-out" />
+		<appender-ref ref="error-out" />
+	</root>
+
+</log4j:configuration>

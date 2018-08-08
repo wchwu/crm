@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysBizLogMapper">
+
+	<!-- 日志经常会插入，这里就不做缓存了-->
+
+	<resultMap id="bizLogResultMap" type="cn.wchwu.model.sys.SysBizLog">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="OPT_LOGIN_NAME" property="optLoginName" jdbcType="VARCHAR" />
+		<result column="OPT_REAL_NAME" property="optRealName" jdbcType="VARCHAR" />
+		<result column="INSERT_DATE" property="insertDate" jdbcType="TIMESTAMP" />
+		<result column="MENU_NAME" property="menuName" jdbcType="VARCHAR" />
+		<result column="FUNC_NAME" property="funcName" jdbcType="VARCHAR" />
+		<result column="REQ_PATH" property="reqPath" jdbcType="VARCHAR" />
+		<result column="REQ_PARAMS" property="reqParams" jdbcType="VARCHAR" />
+		<result column="LOG_MSG" property="logMsg" jdbcType="VARCHAR" />
+		<result column="LOG_TYPE" property="logType" jdbcType="VARCHAR" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="CLIENT_IP" property="clientIp" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 业务日志插入 -->
+	<insert id="insertBizLog">
+		<!-- 
+		selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="id">
+			select SEQ_SYS_OPERATOR.NEXTVAL FROM DUAL 
+		</selectKey> 
+		-->
+		INSERT INTO SYS_BIZ_LOG(id,OPT_LOGIN_NAME, OPT_REAL_NAME, INSERT_DATE, MENU_NAME, FUNC_NAME, 
+			REQ_PATH, REQ_PARAMS, LOG_MSG, LOG_TYPE, MEMO, CLIENT_IP) 
+			VALUES
+			( func_nextval('SEQ_SYS_OPERATOR'),
+			 #{optLoginName, jdbcType=VARCHAR}, 
+			 #{optRealName, jdbcType=VARCHAR}, 
+			 now(),
+			 #{menuName, jdbcType=VARCHAR},
+			 #{funcName, jdbcType=VARCHAR},
+			 #{reqPath, jdbcType=VARCHAR},
+			 #{reqParams, jdbcType=VARCHAR},
+			 #{logMsg, jdbcType=VARCHAR},
+			 #{logType, jdbcType=VARCHAR},
+			 #{memo, jdbcType=VARCHAR},
+			 #{clientIp, jdbcType=VARCHAR}
+			 )
+	</insert>
+	
+
+	<!-- 业务日志查询查询 -->
+	<select id="querySysBizLog" resultMap="bizLogResultMap">
+	select 
+		id,OPT_LOGIN_NAME, OPT_REAL_NAME, INSERT_DATE, MENU_NAME, FUNC_NAME, REQ_PATH, REQ_PARAMS, LOG_MSG, LOG_TYPE, MEMO,CLIENT_IP
+	 from SYS_BIZ_LOG t1
+		<where>
+			<if test="map != null">
+				<if test="map.id != null">
+					ID = #{map.id}
+				</if>
+				<if test="map.optLoginName != null">
+					AND OPT_LOGIN_NAME = #{map.optLoginName}
+				</if>
+				<if test="map.likeOptLoginName != null">
+					AND UPPER(OPT_LOGIN_NAME) like concat('%',UPPER(#{map.likeOptLoginName}),'%')
+				</if>
+				<if test="map.optRealName != null">
+					AND OPT_REAL_NAME = #{map.optRealName}
+				</if>
+				<if test="map.likeOptRealName != null">
+					AND OPT_REAL_NAME like concat('%',#{map.likeOptRealName},'%') 
+				</if>
+				<if test="map.likeMenuName != null">
+					AND MENU_NAME like concat('%',#{map.likeMenuName},'%')
+				</if>
+				<if test="map.likeFuncName != null">
+					AND FUNC_NAME like concat('%',#{map.likeFuncName},'%')
+				</if>
+				<if test="map.likeLogMsg != null">
+				</if>
+				<if test="map.logType != null">
+					AND LOG_TYPE = #{map.logType}
+				</if>
+				<if test="map.beginInsertDate">
+					<![CDATA[
+						AND INSERT_DATE >= #{map.beginInsertDate}
+					]]>
+				</if>
+				<if test="map.endInsertDate">
+					<![CDATA[
+						AND INSERT_DATE <= #{map.endInsertDate}
+					]]>
+				</if>
+			</if>
+		</where>
+	ORDER BY ID DESC
+	</select>
+
+</mapper>
+  

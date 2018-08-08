@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysOperatorMapper">
+
+	<!-- 特定的几个缓存 都引用 cn.wchwu.dao.sys.SysMenuMapper -->
+	<cache-ref namespace="cn.wchwu.dao.sys.SysMenuMapper"/>
+	
+	<resultMap id="operatorResultMap" type="cn.wchwu.model.sys.SysOperator">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="LOGIN_NAME" property="loginName" jdbcType="VARCHAR" />
+		<result column="AUTH_MODE" property="authMode" jdbcType="VARCHAR" />
+		<result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+		<result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+		<result column="GENDER" property="gender" jdbcType="VARCHAR" />
+		<result column="TEL" property="tel" jdbcType="VARCHAR" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- 新增操作员 -->
+	<insert id="insertSysOperator" flushCache="true">
+		<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="id">
+			select func_nextval('SEQ_SYS_OPERATOR') 
+		</selectKey>
+		INSERT INTO SYS_OPERATOR(id,LOGIN_NAME, PASSWORD, REAL_NAME, GENDER, TEL, ADDRESS, EMAIL, AUTH_MODE, STATUS, CREATE_TIME, UPDATE_TIME) 
+			VALUES
+			(#{id},
+			 #{loginName}, 
+			 #{password, jdbcType=VARCHAR}, 
+			 #{realName, jdbcType=VARCHAR},
+			 #{gender, jdbcType=VARCHAR},
+			 #{tel, jdbcType=VARCHAR},
+			 #{address, jdbcType=VARCHAR},
+			 #{email, jdbcType=VARCHAR},
+			 #{authMode, jdbcType=VARCHAR},
+			 #{status, jdbcType=VARCHAR},
+			 now(),
+			 now())
+	</insert>
+	
+	<!-- 删除操作员(实则是做一个更新动作,将状态 status 改为2) -->
+	<update id="delSysOperator">
+		update SYS_OPERATOR set status = '2', UPDATE_TIME = now() where id = #{id}
+	</update>
+	
+	<!-- 修改操作员信息 -->
+	<update id="updateSysOperator">
+		update SYS_OPERATOR
+			set
+				UPDATE_TIME = now(),
+				LOGIN_NAME = #{loginName, jdbcType=VARCHAR},
+				PASSWORD = #{password, jdbcType=VARCHAR},
+				REAL_NAME = #{realName, jdbcType=VARCHAR},
+				GENDER = #{gender, jdbcType=VARCHAR},
+				TEL = #{tel, jdbcType=VARCHAR},
+				ADDRESS = #{address, jdbcType=VARCHAR},
+				EMAIL = #{email, jdbcType=VARCHAR},
+				AUTH_MODE = #{authMode, jdbcType=VARCHAR},
+				STATUS = #{status, jdbcType=VARCHAR}
+		where id = #{id}
+	</update>
+
+	<!-- 操作员查询 -->
+	<select id="querySysOperator" resultMap="operatorResultMap">
+	select 
+		ID,LOGIN_NAME,AUTH_MODE,PASSWORD,REAL_NAME,GENDER,TEL,ADDRESS,EMAIL,STATUS,CREATE_TIME,UPDATE_TIME
+	 from SYS_OPERATOR t1
+		<where>
+			status != 2
+			<if test="map != null">
+				<if test="map.id != null">
+					AND ID = #{map.id}
+				</if>
+				<if test="map.loginName != null">
+					AND LOGIN_NAME = #{map.loginName}
+				</if>
+				<if test="map.likeLoginName != null">
+					AND UPPER(LOGIN_NAME) like concat('%',UPPER(#{map.likeLoginName}),'%')
+				</if>
+				<if test="map.password != null">
+					AND PASSWORD = #{map.password}
+				</if>
+				<if test="map.realName != null">
+					AND REAL_NAME like concat('%',#{map.realName},'%') 
+				</if>
+				<if test="map.email != null">
+					AND EMAIL like concat('%',#{map.email},'%')
+				</if>
+				<if test="map.status != null">
+					AND status = #{map.status}
+				</if>
+				
+				<if test="map.roleCode != null">
+					AND ID in (SELECT operator_id FROM SYS_OPERATOR_ROLE where role_code = #{map.roleCode})
+				</if>
+				<if test="map.notInRoleCode != null">
+					AND not exists(SELECT null FROM SYS_OPERATOR_ROLE t2 where role_code = #{map.notInRoleCode} and t1.id = t2.operator_id)
+				</if>
+			</if>
+		</where>
+	ORDER BY ID
+	<if test="map.ensureOne != null and map.ensureOne eq 'y'.toString()">
+					limit 0,1
+				</if>
+	</select>
+
+	<!-- 根据登录名查找角色 -->
+	<select id="findRoles" resultType="java.lang.String">
+		SELECT role_code
+		  FROM sys_operator_role
+		 where operator_id in
+		       (SELECT id FROM sys_operator where login_name = #{loginName})
+	</select>
+	
+	<!-- 根据登录名查找允许访问的 path-->
+	<select id="findAllowPath" resultType="java.lang.String">
+		SELECT func_url_path
+		  FROM sys_func
+		 where id in
+		       (SELECT func_id
+		          FROM sys_role_func
+		         where role_code in
+		               (SELECT role_code
+		                  FROM sys_operator_role
+		                 where operator_id in
+		                       (SELECT id
+		                          FROM sys_operator
+		                         where login_name = #{loginName})))
+	</select>
+
+</mapper>
+  

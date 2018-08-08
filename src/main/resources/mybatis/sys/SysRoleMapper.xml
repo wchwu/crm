@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysRoleMapper" >
+
+<!-- 特定的几个缓存 都引用 cn.wchwu.dao.sys.SysMenuMapper -->
+<cache-ref namespace="cn.wchwu.dao.sys.SysMenuMapper"/>
+ 
+ <resultMap id="roleResultMap" type="cn.wchwu.model.sys.SysRole" >
+    <result column="ROLE_CODE" property="roleCode" jdbcType="VARCHAR" />
+    <result column="ROLE_NAME" property="roleName" jdbcType="VARCHAR" />
+</resultMap>
+
+<!-- 新增 角色
+	指定jdbcType的情况：列的值可能为空时
+-->
+<insert id="insertRole">
+	insert into sys_role(role_code, role_name) 
+		values(#{roleCode}, #{roleName})
+</insert>
+
+<!-- 修改 角色
+	指定jdbcType的情况：列的值可能为空时
+-->
+<update id="updateRole" >
+	update sys_role set 
+			   role_Name = #{roleName}
+		where role_code = #{roleCode} 
+</update>
+
+<!-- 级联删除 角色、角色与菜单的关系表、角色与用户的关系表 -->
+<delete id="deleteRole">
+	begin
+		delete sys_operator_role where role_code = #{roleCode};
+		delete sys_role where role_code = #{roleCode};
+		delete sys_role_func where role_code = #{roleCode};
+	end;
+</delete>
+
+<!-- 查询角色 -->
+<select id="queryRole" resultMap="roleResultMap">
+   SELECT role_code, role_name FROM sys_role
+   	<if test="map != null">
+  		<where>
+	  		<if test="map.likeRoleCode != null">
+  				role_code like concat('%',#{map.likeRoleCode},'%')
+	  		</if>
+	  		<if test="map.roleCode != null">
+  				AND role_code = #{map.roleCode}
+	  		</if>
+	  		<if test="map.roleName != null">
+	  			AND role_name like concat('%',#{map.roleName},'%')
+	  		</if>
+  		</where>
+  	</if>
+  	ORDER BY role_code
+</select>
+
+<insert id="insertRoleOperator">
+	insert into SYS_OPERATOR_ROLE(Operator_Id,ROLE_CODE)
+	values(#{operatorId}, #{roleCode})
+</insert>
+
+<delete id="deleteRoleOperator">
+	delete SYS_OPERATOR_ROLE where Operator_Id = #{operatorId} and ROLE_CODE = #{roleCode}
+</delete>
+
+</mapper>
+  

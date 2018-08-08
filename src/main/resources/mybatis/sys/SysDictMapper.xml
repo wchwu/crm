@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.sys.SysDictMapper" >
+
+ <cache type="org.mybatis.caches.ehcache.EhcacheCache" ></cache>
+ 
+ <resultMap id="dictTypeResultMap" type="cn.wchwu.model.sys.SysDictType" >
+    <result column="dicttypeid" property="dictTypeId" jdbcType="VARCHAR" />
+    <result column="dicttypename" property="dictTypeName" jdbcType="VARCHAR" />
+    <result column="rank" property="rank" jdbcType="INTEGER" />
+    <result column="parentid" property="parentId" jdbcType="VARCHAR" />
+    <result column="seqno" property="seqNo" jdbcType="VARCHAR" />
+</resultMap>
+ 
+ <resultMap id="dictEntryResultMap" type="cn.wchwu.model.sys.SysDictEntry" >
+    <result column="dicttypeid" property="dictTypeId" jdbcType="VARCHAR" />
+    <result column="dictid" property="dictId" jdbcType="VARCHAR" />
+    <result column="dictname" property="dictName" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="INTEGER" />
+    <result column="sortno" property="sortNo" jdbcType="INTEGER" />
+    <result column="rank" property="rank" jdbcType="INTEGER" />
+    <result column="parentid" property="parentId" jdbcType="INTEGER" />
+    <result column="seqno" property="seqNo" jdbcType="VARCHAR" />
+    <result column="filter1" property="filter1" jdbcType="VARCHAR" />
+    <result column="filter2" property="filter2" jdbcType="VARCHAR" />
+</resultMap>
+
+<!-- 新增 DictType
+	指定jdbcType的情况：列的值可能为空时
+-->
+<insert id="insertDictType" flushCache="true">
+	insert into sys_dict_type(dicttypeid, dicttypename, rank, parentid, seqno) 
+		values(#{dictTypeId}, 
+			   #{dictTypeName}, 
+			   #{rank, jdbcType=NUMERIC}, 
+			   #{parentId, jdbcType=VARCHAR}, 
+			   #{seqNo, jdbcType=VARCHAR})
+</insert>
+
+<!-- 新增 DictEntry
+	指定jdbcType的情况：列的值可能为空时
+-->
+<insert id="insertDictEntry" flushCache="true">
+	insert into sys_dict_entry(dicttypeid, dictid, dictname, STATUS, sortno, rank, parentid, seqno, filter1, filter2 ) 
+		values(#{dictTypeId}, 
+			   #{dictId}, 
+			   #{dictName, jdbcType=VARCHAR}, 
+			   #{status, jdbcType=NUMERIC}, 
+			   #{sortNo, jdbcType=NUMERIC}, 
+			   #{rank, jdbcType=NUMERIC}, 
+			   #{parentId, jdbcType=VARCHAR}, 
+			   #{seqNo, jdbcType=VARCHAR}, 
+			   #{filter1, jdbcType=VARCHAR}, 
+			   #{filter2, jdbcType=VARCHAR})
+</insert>
+
+<!-- 修改 DictType
+	指定jdbcType的情况：列的值可能为空时
+-->
+<update id="updateDictType" flushCache="true">
+	update sys_dict_type set 
+			   dicttypename = #{dictTypeName, jdbcType=VARCHAR}, 
+			   rank = #{rank, jdbcType=NUMERIC}, 
+			   parentid = #{parentId, jdbcType=VARCHAR}, 
+			   seqno = #{seqNo, jdbcType=VARCHAR}
+		where dicttypeid = #{dictTypeId} 
+</update>
+
+<!-- 修改 DictEntry
+	指定jdbcType的情况：列的值可能为空时
+-->
+<update id="updateDictEntry" flushCache="true">
+	update sys_dict_entry set 
+			   dictid = #{dictId}, 
+			   dictname = #{dictName, jdbcType=VARCHAR}, 
+			   STATUS = #{status, jdbcType=NUMERIC}, 
+			   sortno = #{sortNo, jdbcType=NUMERIC}, 
+			   rank = #{rank, jdbcType=NUMERIC}, 
+			   parentid = #{parentId, jdbcType=VARCHAR}, 
+			   seqno = #{seqNo, jdbcType=VARCHAR}, 
+			   filter1 = #{filter1, jdbcType=VARCHAR}, 
+			   filter2 = #{filter2, jdbcType=VARCHAR}
+		where dicttypeid = #{dictTypeId} 
+			and dictid = #{dictId}
+</update>
+
+<!-- 级联删除 DictType -->
+<delete id="deleteDictType" flushCache="true">
+	begin
+		delete sys_dict_entry where dicttypeid = #{dictTypeId};
+		delete sys_dict_type where dicttypeid = #{dictTypeId};
+	end;
+</delete>
+
+<!-- 删除  DictEntry-->
+<delete id="deleteDictEntry" flushCache="true">
+	delete sys_dict_entry where dicttypeid = #{dictTypeId} and dictid = #{dictId}
+</delete>
+
+<!-- 查询字典类型列表 -->
+<select id="querySysDictType" resultMap="dictTypeResultMap">
+   SELECT 
+	  dicttypeid,
+	  dicttypename,
+	  rank,
+	  parentid,
+	  seqno
+	FROM
+  		sys_dict_type 
+  	<if test="map != null">
+  		<where>
+	  		<if test="map.dictTypeName != null">
+	  			(
+	  				dicttypename like  concat('%',#{map.dictTypeName},'%')
+	  			 	OR dicttypeid like  concat('%',#{map.dictTypeName},'%')
+	  			)
+	  		</if>
+	  		<if test="map.dictName != null">
+	  			AND dicttypeid in(
+	  				select dicttypeid from SYS_DICT_ENTRY where dictname like  concat('%',#{map.dictName},'%')
+	  			)
+	  		</if>
+  		</where>
+  	</if>
+  	ORDER BY dicttypeid
+</select>
+
+<!-- 查询字典条目列表 -->
+<select id="querySysDictEntry" resultMap="dictEntryResultMap" >
+   SELECT 
+	  dicttypeid,
+	  dictid,
+	  dictname,
+	  STATUS,
+	  sortno,
+	  rank,
+	  parentid,
+	  seqno,
+	  filter1,
+	  filter2 
+	FROM
+  		sys_dict_entry 
+  	<if test="p != null">
+  		<where>
+	  		<if test="p.dictTypeId != null">
+	  			dicttypeid = #{p.dictTypeId} 
+	  		</if>
+	  		<if test="p.dictId != null">
+	  			dictid = #{p.dictId}
+	  		</if>
+	  		<!-- 当qtype不等于all时,只查询status 为0 的数据 -->
+			<if test="p.qtype neq 'all'.toString()">
+				AND status = 0
+			</if>
+  		</where>
+  	</if>
+  	ORDER BY sortno, dictid
+</select>
+
+</mapper>
+  
