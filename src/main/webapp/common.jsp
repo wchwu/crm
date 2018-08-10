@@ -12,7 +12,7 @@
 <%String contextPath = request.getContextPath();%>
 
 <%--定义版本信息：在自己扩展的js、css样式后面跟上版本参数就可以避免客户端缓存不刷新的问题了。 这里是统一的版本没有针对每一个文件做版本 --%>
-<%String version = "1.0";%>
+<%String version = "3.0";%>
 
 <%-- cookie 中获取jquery easyui 最近使用的主题 --%>
 <%

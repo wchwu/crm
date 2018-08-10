@@ -20,6 +20,8 @@ public class WorkExperiencePo implements Serializable {
 
     private String workDesc;
 
+    private Integer sort;
+
     private Date createTime;
 
     private Date updateTime;
@@ -98,5 +100,13 @@ public class WorkExperiencePo implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

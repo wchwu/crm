@@ -9,11 +9,13 @@
     <result column="WORK_UNIT" property="workUnit" jdbcType="VARCHAR" />
     <result column="OFFICE" property="office" jdbcType="VARCHAR" />
     <result column="WORK_DESC" property="workDesc" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="INTEGER" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, MEMBER_ID, START_DATE, END_DATE, WORK_UNIT, OFFICE, WORK_DESC, CREATE_TIME, UPDATE_TIME
+    ID, MEMBER_ID, START_DATE, END_DATE, WORK_UNIT, OFFICE, WORK_DESC, SORT, CREATE_TIME, 
+    UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wchwu.model.busin.WorkExperiencePo" >
     select 
@@ -30,12 +32,12 @@
   <insert id="insert" parameterType="cn.wchwu.model.busin.WorkExperiencePo" >
     insert into work_experience (ID, MEMBER_ID, START_DATE, 
       END_DATE, WORK_UNIT, OFFICE, 
-      WORK_DESC, CREATE_TIME, UPDATE_TIME
-      )
+      WORK_DESC, SORT, CREATE_TIME, 
+      UPDATE_TIME)
     values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{startDate,jdbcType=VARCHAR}, 
       #{endDate,jdbcType=VARCHAR}, #{workUnit,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, 
-      #{workDesc,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE}
-      )
+      #{workDesc,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.WorkExperiencePo" >
     insert into work_experience
@@ -60,6 +62,9 @@
       </if>
       <if test="workDesc != null" >
         WORK_DESC,
+      </if>
+      <if test="sort != null" >
+        SORT,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
@@ -90,6 +95,9 @@
       <if test="workDesc != null" >
         #{workDesc,jdbcType=VARCHAR},
       </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=DATE},
       </if>
@@ -116,6 +124,9 @@
       <if test="workDesc != null" >
         WORK_DESC = #{workDesc,jdbcType=VARCHAR},
       </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=DATE},
       </if>
@@ -133,9 +144,17 @@
       WORK_UNIT = #{workUnit,jdbcType=VARCHAR},
       OFFICE = #{office,jdbcType=VARCHAR},
       WORK_DESC = #{workDesc,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=INTEGER},
       CREATE_TIME = #{createTime,jdbcType=DATE},
       UPDATE_TIME = #{updateTime,jdbcType=DATE}
     where ID = #{id,jdbcType=INTEGER}
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </update>
+  
+  <select id="queryListById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from work_experience
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

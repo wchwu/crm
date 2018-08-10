@@ -26,9 +26,9 @@
 							pageContext.setAttribute("cacheName", cacheName);
 							pageContext.setAttribute("cache",
 									cacheManager.getCache(cacheName));
-							if (cacheName.equals("cn.aresoft.dao.sys.SysDictMapper")) {
+							if (cacheName.equals("cn.wchwu.dao.sys.SysDictMapper")) {
 								pageContext.setAttribute("memo", "(业务字典缓存)");
-							} else if (cacheName.equals("cn.aresoft.dao.sys.SysMenuMapper")) {
+							} else if (cacheName.equals("cn.wchwu.dao.sys.SysMenuMapper")) {
 								pageContext.setAttribute("memo", "(菜单资源权限缓存)");
 							}
 							

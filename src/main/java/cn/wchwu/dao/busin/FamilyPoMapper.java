@@ -1,5 +1,7 @@
 package cn.wchwu.dao.busin;
 
+import java.util.List;
+
 import cn.wchwu.model.busin.FamilyPo;
 
 public interface FamilyPoMapper {
@@ -14,4 +16,6 @@ public interface FamilyPoMapper {
     int updateByPrimaryKeySelective(FamilyPo record);
 
     int updateByPrimaryKey(FamilyPo record);
+
+    List<FamilyPo> queryListById(Integer id);
 }

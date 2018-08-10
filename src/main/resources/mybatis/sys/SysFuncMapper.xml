@@ -60,10 +60,8 @@
 
 <!-- 级联删除 功能、角色相关联的功能 -->
 <delete id="deleteFunc">
-	begin
-		delete SYS_FUNC where id = #{id} and sys_flag != '0';
-		delete SYS_ROLE_FUNC where func_id = #{id};
-	end;
+		delete from SYS_FUNC where id = #{id} and sys_flag != '0';
+		delete from SYS_ROLE_FUNC where func_id = #{id};
 </delete>
 
 <!-- 查询功能 -->
@@ -126,7 +124,7 @@
 
 <!-- 删除角色-功能关系 -->
 <delete id="deleteRoleFunc">
-	delete SYS_ROLE_FUNC where role_code = #{roleCode}
+	delete from SYS_ROLE_FUNC where role_code = #{roleCode}
 </delete>
 
 <select id="queryFuncIdByRoleCode" resultType="java.lang.String">

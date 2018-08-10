@@ -1,5 +1,7 @@
 package cn.wchwu.dao.busin;
 
+import java.util.List;
+
 import cn.wchwu.model.busin.EduExperiencePo;
 
 public interface EduExperiencePoMapper {
@@ -14,4 +16,6 @@ public interface EduExperiencePoMapper {
     int updateByPrimaryKeySelective(EduExperiencePo record);
 
     int updateByPrimaryKey(EduExperiencePo record);
+
+    List<EduExperiencePo> queryListById(Integer id);
 }

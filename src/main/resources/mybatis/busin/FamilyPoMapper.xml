@@ -149,4 +149,11 @@
     where ID = #{id,jdbcType=INTEGER}
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </update>
+  
+  <select id="queryListById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from family
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

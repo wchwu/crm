@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="easyui-layout" data-options="fit:true, border:false">  
-		<div data-options="region:'north',title:'查询', border:false" style="height: 150px; background: #F4F4F4;overflow: hidden;">
+		<div data-options="region:'north',title:'查询', border:false" style="height: 100px; background: #F4F4F4;overflow: hidden;">
 			<form id="searchForm" class="form" onkeydown="if (event.keyCode == 13) { $('#a_search').click();}">
 				<table class="table" style="width: 100%;">
 					<tbody>
@@ -18,34 +18,18 @@
 								<input class="easyui-validatebox" name="member.name" />
 							</td>
 							<th>身份证号</th>
-							<td><input class="easyui-validatebox" name="member.certNo" /></td>
+							<td><input class="easyui-validatebox" name="member.certId" /></td>
 						</tr>
 						<tr>
-							<th>客户号</th>
-							<td><input class="easyui-validatebox" name="custCurSc.custId" /></td>
+							<th>电话</th>
+							<td><input class="easyui-validatebox" name="member.tel" /></td>
 							<th></th>
 							<td>
 							</td>
 						</tr>
 						<tr>
-							<th>当前积分</th>
-							<td>
-								<input type="text" name="beginScScore" class="easyui-numberbox"></input>
-								至
-								<input type="text" name="endScScore" class="easyui-numberbox"></input>
-							</td>
-							<th>
-								冻结积分
-							</th>
-							<td>
-								<input type="text" name="beginScFrz" class="easyui-numberbox"></input>
-								至
-								<input type="text" name="endScFrz" class="easyui-numberbox"></input>
-							</td>
-						</tr>
-						<tr>
 							<th colspan="4" style="text-align: center;">
-								<a class="easyui-linkbutton l-btn" id="a_search" onclick="$('#tb-custCurSc').datagrid('load', SYS.serializeObject($('#searchForm')));"> 查 找 </a>
+								<a class="easyui-linkbutton l-btn" id="a_search" onclick="$('#tb-member').datagrid('load', SYS.serializeObject($('#searchForm')));"> 查 找 </a>
 								<a class="easyui-linkbutton l-btn" onclick="$('#searchForm').form('clear');"> 清 空 </a>
 							</th>
 						</tr>
@@ -53,7 +37,7 @@
 				</table>
 			</form>
 		</div>
-		<!-- 客户信息列表-->
+		<!-- 成员信息列表-->
 		<div data-options="region:'center',split:false">
 			<table id="tb-member"  data-options="
 				url: SYS.contextPath + '/member/memberList.action',
@@ -73,8 +57,24 @@
 						<th data-options="field:'name', width: '20%'" class="text-align:center">成员姓名 </th>
 						<th data-options="field:'certId', width: '20%'" class="text-align:center">证件号码</th>
 						<th data-options="field:'genderName', width: '10%'" class="text-align:center">性别</th>
-						<th data-options="field:'nation', width: '10%'">民族</th>
-						<th data-options="field:'dept', width: '10%'">部门</th>
+						<th data-options="field:'nationName', width: '10%'">民族</th>
+						<th data-options="field:'deptName', width: '10%'">部门</th>
+						<th data-options="field:'office', width: '10%'">职务</th>
+						<th data-options="field:'marriageName', width: '10%'">婚姻</th>
+						<th data-options="field:'polityName', width: '10%'">政治面貌</th>
+						<th data-options="field:'tel', width: '10%'">联系电话</th>
+						<th data-options="field:'address', width: '10%'">地址</th>
+						<th data-options="field:'companyAddr', width: '10%'">公司地址</th>
+						<th data-options="field:'email', width: '10%'">邮箱地址</th>
+						<th data-options="field:'statusName', width: '10%'">状态</th>
+						<th data-options="field:'originalPlace', width: '10%'">祖籍</th>
+						<th data-options="field:'nativePlace', width: '10%'">籍贯</th>
+						<th data-options="field:'health_status', width: '10%'">健康状况</th>
+						<th data-options="field:'birthDate', width: '10%'">出生日期</th>
+						<th data-options="field:'hobby', width: '10%'">兴趣爱好</th>
+						<th data-options="field:'advantage', width: '10%'">特长</th>
+						<th data-options="field:'joinDate', width: '10%'">加入时间</th>
+						<th data-options="field:'resumePath', width: '10%'">简历</th>
 					</tr>
 				</thead>
 			</table> 
@@ -91,8 +91,8 @@
 				iconCls: 'icon-add',
 				handler: function() {
 					top.SYS.modalDialog({
-						title : '新增操作员',
-						url : SYS.contextPath + '/pages/sys/operatorInput.jsp',
+						title : '新增成员',
+						url : SYS.contextPath + '/pages/busin/member/memberInput.jsp',
 						resizable : true,
 						width: '70%',
 						height: '65%',
@@ -109,8 +109,8 @@
 						$.messager.alert('提示', '请选择一行进行修改！', 'warning');
 					} else {
 						top.SYS.modalDialog({
-							title : '编辑操作员信息',
-							url : SYS.contextPath + '/pages/sys/operatorInput.jsp?id=' + rows[0].id,
+							title : '编辑成员信息',
+							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?id=' + rows[0].id,
 							resizable : true,
 							width: '70%',
 							height: '65%',
@@ -142,8 +142,9 @@
 								}
 								
 								for (var i in idArr) data.push({ name: 'ids', value: idArr[i] });
+								console.log(data);
 							    $.ajax({
-							       url: SYS.contextPath + "/sys/operator/del.action",
+							       url: SYS.contextPath + "/member/del.action",
 							       data: data,
 							       dataType: "json",
 							       traditional: true,

@@ -86,15 +86,13 @@
 
 <!-- 级联删除 DictType -->
 <delete id="deleteDictType" flushCache="true">
-	begin
-		delete sys_dict_entry where dicttypeid = #{dictTypeId};
-		delete sys_dict_type where dicttypeid = #{dictTypeId};
-	end;
+		delete from sys_dict_entry where dicttypeid = #{dictTypeId};
+		delete from sys_dict_type where dicttypeid = #{dictTypeId};
 </delete>
 
 <!-- 删除  DictEntry-->
 <delete id="deleteDictEntry" flushCache="true">
-	delete sys_dict_entry where dicttypeid = #{dictTypeId} and dictid = #{dictId}
+	delete from sys_dict_entry where dicttypeid = #{dictTypeId} and dictid = #{dictId}
 </delete>
 
 <!-- 查询字典类型列表 -->

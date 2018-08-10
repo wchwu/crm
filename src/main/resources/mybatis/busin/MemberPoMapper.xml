@@ -393,88 +393,91 @@
 	 from member
 	 where 1=1
   	<if test="record.operatorId != null">
-        and OPERATOR_ID = #{record.operatorId,jdbcType=INTEGER},
+        and OPERATOR_ID = #{record.operatorId,jdbcType=INTEGER}
+      </if>
+      <if test="record.certId != null">
+        and CERT_ID = #{record.certId,jdbcType=VARCHAR}
       </if>
       <if test="record.name != null">
-        and NAME = #{record.name,jdbcType=VARCHAR},
+        and NAME like concat('%',#{record.name,jdbcType=VARCHAR},'%') 
       </if>
       <if test="record.otherName != null">
-        and OTHER_NAME = #{record.otherName,jdbcType=VARCHAR},
+        and OTHER_NAME = #{record.otherName,jdbcType=VARCHAR}
       </if>
       <if test="record.gender != null">
-        and GENDER = #{record.gender,jdbcType=VARCHAR},
+        and GENDER = #{record.gender,jdbcType=VARCHAR}
       </if>
       <if test="record.nation != null">
-        and NATION = #{record.nation,jdbcType=VARCHAR},
+        and NATION = #{record.nation,jdbcType=VARCHAR}
       </if>
       <if test="record.dept != null">
-        and DEPT = #{record.dept,jdbcType=VARCHAR},
+        and DEPT = #{record.dept,jdbcType=VARCHAR}
       </if>
       <if test="record.office != null">
-        and OFFICE = #{record.office,jdbcType=VARCHAR},
+        and OFFICE = #{record.office,jdbcType=VARCHAR}
       </if>
       <if test="record.marriage != null">
-        and MARRIAGE = #{record.marriage,jdbcType=VARCHAR},
+        and MARRIAGE = #{record.marriage,jdbcType=VARCHAR}
       </if>
       <if test="record.polity != null">
-        and POLITY = #{record.polity,jdbcType=VARCHAR},
+        and POLITY = #{record.polity,jdbcType=VARCHAR}
       </if>
       <if test="record.tel != null">
-        and TEL = #{record.tel,jdbcType=VARCHAR},
+        and TEL = like concat('%',#{record.tel,jdbcType=VARCHAR},'%')
       </if>
       <if test="record.address != null">
-        and ADDRESS = #{record.address,jdbcType=VARCHAR},
+        and ADDRESS = #{record.address,jdbcType=VARCHAR}
       </if>
       <if test="record.companyAddr != null">
-        and COMPANY_ADDR = #{record.companyAddr,jdbcType=VARCHAR},
+        and COMPANY_ADDR = #{record.companyAddr,jdbcType=VARCHAR}
       </if>
       <if test="record.email != null">
-        and EMAIL = #{record.email,jdbcType=VARCHAR},
+        and EMAIL = #{record.email,jdbcType=VARCHAR}
       </if>
       <if test="record.status != null">
-        and STATUS = #{record.status,jdbcType=VARCHAR},
+        and STATUS = #{record.status,jdbcType=VARCHAR}
       </if>
       <if test="record.originalPlace != null">
-        and ORIGINAL_PLACE = #{record.originalPlace,jdbcType=VARCHAR},
+        and ORIGINAL_PLACE = #{record.originalPlace,jdbcType=VARCHAR}
       </if>
       <if test="record.nativePlace != null">
-        and NATIVE_PLACE = #{record.nativePlace,jdbcType=VARCHAR},
+        and NATIVE_PLACE = #{record.nativePlace,jdbcType=VARCHAR}
       </if>
       <if test="record.healthStatus != null">
-        and HEALTH_STATUS = #{record.healthStatus,jdbcType=VARCHAR},
+        and HEALTH_STATUS = #{record.healthStatus,jdbcType=VARCHAR}
       </if>
       <if test="record.birthDate != null">
-        and BIRTH_DATE = #{record.birthDate,jdbcType=VARCHAR},
+        and BIRTH_DATE = #{record.birthDate,jdbcType=VARCHAR}
       </if>
       <if test="record.hobby != null">
-        and HOBBY = #{record.hobby,jdbcType=VARCHAR},
+        and HOBBY = #{record.hobby,jdbcType=VARCHAR}
       </if>
       <if test="record.advantage != null">
-        and ADVANTAGE = #{record.advantage,jdbcType=VARCHAR},
+        and ADVANTAGE = #{record.advantage,jdbcType=VARCHAR}
       </if>
       <if test="record.intentDept != null">
-        and INTENT_DEPT = #{record.intentDept,jdbcType=VARCHAR},
+        and INTENT_DEPT = #{record.intentDept,jdbcType=VARCHAR}
       </if>
       <if test="record.intentDept2 != null">
-        and INTENT_DEPT2 = #{record.intentDept2,jdbcType=VARCHAR},
+        and INTENT_DEPT2 = #{record.intentDept2,jdbcType=VARCHAR}
       </if>
       <if test="record.joinReason != null">
-        and JOIN_REASON = #{record.joinReason,jdbcType=VARCHAR},
+        and JOIN_REASON = #{record.joinReason,jdbcType=VARCHAR}
       </if>
       <if test="record.wantGain != null">
-        and WANT_GAIN = #{record.wantGain,jdbcType=VARCHAR},
+        and WANT_GAIN = #{record.wantGain,jdbcType=VARCHAR}
       </if>
       <if test="record.joinDate != null">
-        and JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR},
+        and JOIN_DATE = #{record.joinDate,jdbcType=VARCHAR}
       </if>
       <if test="record.resumePath != null">
-        and RESUME_PATH = #{record.resumePath,jdbcType=VARCHAR},
+        and RESUME_PATH = #{record.resumePath,jdbcType=VARCHAR}
       </if>
       <if test="record.createTime != null">
-        and CREATE_TIME = #{record.createTime,jdbcType=DATE},
+        and CREATE_TIME = #{record.createTime,jdbcType=DATE}
       </if>
       <if test="record.updateTime != null">
-        and UPDATE_TIME = #{record.updateTime,jdbcType=DATE},
+        and UPDATE_TIME = #{record.updateTime,jdbcType=DATE}
       </if>
   </select>
 </mapper>

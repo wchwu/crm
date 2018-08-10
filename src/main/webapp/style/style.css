@@ -60,3 +60,9 @@ legend {
 	border: 1px dotted #D1D7DC;
 	font-size: small;
 }
+btnLink{
+	color: #0e90d2 ;
+}
+addBtn{
+	display: inline ;
+}

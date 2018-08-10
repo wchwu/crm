@@ -157,35 +157,32 @@
  						PID = #{pid, jdbcType=VARCHAR},
  					</if>
  					RANK = #{rank}
-			where ID =  #{id}
+			where ID =  #{id};
 			
 			<!-- 更新层级 -->
 			<if test="chgParent == 0">
-				;
 				<!-- 更新本菜单和子菜单的seq、menu_level -->
 				update SYS_MENU T
 					set 
 						T.MENU_LEVEL = T.MENU_LEVEL + #{toMenuLevel} - #{fromMenuLevel},
 						T.ID_SEQ = CONCAT(#{toIdSeq}, SUBSTR(T.ID_SEQ, LENGTH(#{fromIdSeq})+1)) 
-					where T.ID_SEQ like  #{idSeq}
+					where T.ID_SEQ like  #{idSeq};
 			</if>
 	</update>
 	
 	<!-- 删除菜单(级联删除子菜单)、删除对应的功能、删除功能与角色的关系  -->
 	<delete id="deleteMenu">
-		begin
 			<!-- 删除角色功能与角色间 的关系 -->
-			delete SYS_ROLE_FUNC where func_id in(
+			delete from SYS_ROLE_FUNC where func_id in(
 				select id as func_id from sys_func where menu_id in(
-					SELECT id as menu_id FROM sys_menu where ID_SEQ like  '%.'||#{id}||'.%'));
+					SELECT id as menu_id FROM sys_menu where ID_SEQ like concat('%.',#{id},'.%')));
 			
 			<!-- 删除菜单对应的功能 -->
-			delete sys_func where menu_id in(
-				SELECT id as menu_id FROM sys_menu where ID_SEQ like  '%.'||#{id}||'.%');
+			delete from sys_func where menu_id in(
+				SELECT id as menu_id FROM sys_menu where ID_SEQ like  concat('%.',#{id},'.%'));
 			
 			<!-- 删除菜单 -->
-			delete sys_menu where ID_SEQ like  '%.'||#{id}||'.%';
-		end;
+			delete from sys_menu where ID_SEQ like  concat('%.',#{id},'.%');
 	</delete>
 
 </mapper>

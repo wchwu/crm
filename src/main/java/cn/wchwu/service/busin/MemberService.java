@@ -13,13 +13,9 @@ package cn.wchwu.service.busin;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import cn.wchwu.common.Constant;
-import cn.wchwu.dao.busin.MemberPoMapper;
 import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.model.busin.MemberPo;
+import cn.wchwu.model.busin.vo.MemberVo;
 
 /**
  * @description:(TODO 请在此添加描述)
@@ -28,11 +24,7 @@ import cn.wchwu.model.busin.MemberPo;
  * @date 2018年8月5日 下午9:35:50
  * @since JDK 1.6
  */
-@Service
-public class MemberService {
-
-    @Autowired
-    private MemberPoMapper memberPoMapper;
+public interface MemberService extends IService<MemberPo> {
 
     /**
      * queryList:查询成员列表
@@ -43,7 +35,35 @@ public class MemberService {
      * @author Chaowu.Wang
      * @date 2018年8月5日 下午10:22:16
      */
-    public List<MemberPo> queryList(PageCond pageCond, MemberPo record) {
-        return memberPoMapper.queryList(Constant.DB_NAME_DEDAULT, pageCond, record);
-    }
+    public List<MemberPo> queryList(PageCond pageCond, MemberPo record);
+
+    /**
+     * getMemberById:查询成员
+     * 
+     * @param id
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年8月9日 下午6:52:51
+     */
+    MemberVo getMemberById(Integer id);
+
+    /**
+     * update:更新
+     * 
+     * @param record
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年8月9日 下午6:45:01
+     */
+    public int update(MemberPo record);
+
+    /**
+     * delBatch:批量删除
+     * 
+     * @param ids
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年8月9日 下午3:40:40
+     */
+    public int delBatch(List<Integer> ids);
 }

@@ -10,12 +10,13 @@
     <result column="MAJOR" property="major" jdbcType="VARCHAR" />
     <result column="DEGREE" property="degree" jdbcType="VARCHAR" />
     <result column="FULL_TIME_FLAG" property="fullTimeFlag" jdbcType="VARCHAR" />
+    <result column="SORT" property="sort" jdbcType="INTEGER" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, MEMBER_ID, START_DATE, END_DATE, SCHOOL, MAJOR, DEGREE, FULL_TIME_FLAG, CREATE_TIME, 
-    UPDATE_TIME
+    ID, MEMBER_ID, START_DATE, END_DATE, SCHOOL, MAJOR, DEGREE, FULL_TIME_FLAG, SORT, 
+    CREATE_TIME, UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wchwu.model.busin.EduExperiencePo" >
     select 
@@ -32,12 +33,12 @@
   <insert id="insert" parameterType="cn.wchwu.model.busin.EduExperiencePo" >
     insert into edu_experience (ID, MEMBER_ID, START_DATE, 
       END_DATE, SCHOOL, MAJOR, 
-      DEGREE, FULL_TIME_FLAG, CREATE_TIME, 
-      UPDATE_TIME)
+      DEGREE, FULL_TIME_FLAG, SORT, 
+      CREATE_TIME, UPDATE_TIME)
     values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{startDate,jdbcType=VARCHAR}, 
       #{endDate,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, #{major,jdbcType=VARCHAR}, 
-      #{degree,jdbcType=VARCHAR}, #{fullTimeFlag,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
-      #{updateTime,jdbcType=DATE})
+      #{degree,jdbcType=VARCHAR}, #{fullTimeFlag,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.EduExperiencePo" >
     insert into edu_experience
@@ -65,6 +66,9 @@
       </if>
       <if test="fullTimeFlag != null" >
         FULL_TIME_FLAG,
+      </if>
+      <if test="sort != null" >
+        SORT,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
@@ -98,6 +102,9 @@
       <if test="fullTimeFlag != null" >
         #{fullTimeFlag,jdbcType=VARCHAR},
       </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=DATE},
       </if>
@@ -127,6 +134,9 @@
       <if test="fullTimeFlag != null" >
         FULL_TIME_FLAG = #{fullTimeFlag,jdbcType=VARCHAR},
       </if>
+      <if test="sort != null" >
+        SORT = #{sort,jdbcType=INTEGER},
+      </if>
       <if test="createTime != null" >
         CREATE_TIME = #{createTime,jdbcType=DATE},
       </if>
@@ -145,9 +155,17 @@
       MAJOR = #{major,jdbcType=VARCHAR},
       DEGREE = #{degree,jdbcType=VARCHAR},
       FULL_TIME_FLAG = #{fullTimeFlag,jdbcType=VARCHAR},
+      SORT = #{sort,jdbcType=INTEGER},
       CREATE_TIME = #{createTime,jdbcType=DATE},
       UPDATE_TIME = #{updateTime,jdbcType=DATE}
     where ID = #{id,jdbcType=INTEGER}
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </update>
+  
+  <select id="queryListById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from edu_experience
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
 </mapper>

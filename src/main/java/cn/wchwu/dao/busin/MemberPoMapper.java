@@ -29,5 +29,17 @@ public interface MemberPoMapper {
      * @author Chaowu.Wang
      * @date 2018年8月5日 下午10:00:58
      */
-    List<MemberPo> queryList(@Param("dsName") String dsName, @Param("PAGE") PageCond pageCond, @Param("record") MemberPo record);
+    List<MemberPo> queryList(@Param("PAGE") PageCond pageCond, @Param("record") MemberPo record);
+
+    /**
+     * deleteBatch:批量删除
+     * 
+     * @param ids
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年8月9日 下午3:39:47
+     */
+    int deleteBatch(@Param("ids") List<Integer> ids);
+
+    int save(MemberPo memberPo);
 }

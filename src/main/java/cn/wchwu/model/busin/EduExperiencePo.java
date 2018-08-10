@@ -30,6 +30,8 @@ public class EduExperiencePo implements Serializable {
 
     private Integer memberId;
 
+    private Integer sort;
+
     public Integer getId() {
         return id;
     }
@@ -108,5 +110,13 @@ public class EduExperiencePo implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

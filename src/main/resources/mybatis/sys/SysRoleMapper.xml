@@ -29,11 +29,9 @@
 
 <!-- 级联删除 角色、角色与菜单的关系表、角色与用户的关系表 -->
 <delete id="deleteRole">
-	begin
-		delete sys_operator_role where role_code = #{roleCode};
-		delete sys_role where role_code = #{roleCode};
-		delete sys_role_func where role_code = #{roleCode};
-	end;
+		delete from sys_operator_role where role_code = #{roleCode};
+		delete from sys_role where role_code = #{roleCode};
+		delete from sys_role_func where role_code = #{roleCode};
 </delete>
 
 <!-- 查询角色 -->
@@ -61,7 +59,7 @@
 </insert>
 
 <delete id="deleteRoleOperator">
-	delete SYS_OPERATOR_ROLE where Operator_Id = #{operatorId} and ROLE_CODE = #{roleCode}
+	delete from SYS_OPERATOR_ROLE where Operator_Id = #{operatorId} and ROLE_CODE = #{roleCode}
 </delete>
 
 </mapper>
