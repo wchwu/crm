@@ -20,6 +20,8 @@ public interface MemberPoMapper {
 
     int updateByPrimaryKey(MemberPo record);
 
+    int getMemberId();
+
     /**
      * queryList:查询成员列表
      * 

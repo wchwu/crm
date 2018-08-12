@@ -9,6 +9,7 @@
     <result column="OTHER_NAME" property="otherName" jdbcType="VARCHAR" />
     <result column="GENDER" property="gender" jdbcType="VARCHAR" />
     <result column="NATION" property="nation" jdbcType="VARCHAR" />
+    <result column="DEGREE" property="degree" jdbcType="VARCHAR" />
     <result column="DEPT" property="dept" jdbcType="VARCHAR" />
     <result column="OFFICE" property="office" jdbcType="VARCHAR" />
     <result column="MARRIAGE" property="marriage" jdbcType="VARCHAR" />
@@ -34,11 +35,14 @@
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEPT, OFFICE, MARRIAGE, 
-    POLITY, TEL, ADDRESS, COMPANY_ADDR, EMAIL, STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
+    ID, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEGREE, DEPT, OFFICE, 
+    MARRIAGE, POLITY, TEL, ADDRESS, COMPANY_ADDR, EMAIL, STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
     HEALTH_STATUS, BIRTH_DATE, HOBBY, ADVANTAGE, INTENT_DEPT, INTENT_DEPT2, JOIN_REASON, 
     WANT_GAIN, JOIN_DATE, RESUME_PATH, CREATE_TIME, UPDATE_TIME
   </sql>
+  <select id="getMemberId" resultType="int">
+  	select func_nextval('SEQ_MEMBER') 
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -52,26 +56,26 @@
   <insert id="insert" parameterType="cn.wchwu.model.busin.MemberPo" >
     insert into member (ID, OPERATOR_ID, CERT_ID, 
       NAME, OTHER_NAME, GENDER, 
-      NATION, DEPT, OFFICE, 
-      MARRIAGE, POLITY, TEL, 
-      ADDRESS, COMPANY_ADDR, EMAIL, 
-      STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
-      HEALTH_STATUS, BIRTH_DATE, HOBBY, 
-      ADVANTAGE, INTENT_DEPT, INTENT_DEPT2, 
-      JOIN_REASON, WANT_GAIN, JOIN_DATE, 
-      RESUME_PATH, CREATE_TIME, UPDATE_TIME
-      )
+      NATION, DEGREE, DEPT, 
+      OFFICE, MARRIAGE, POLITY, 
+      TEL, ADDRESS, COMPANY_ADDR, 
+      EMAIL, STATUS, ORIGINAL_PLACE, 
+      NATIVE_PLACE, HEALTH_STATUS, BIRTH_DATE, 
+      HOBBY, ADVANTAGE, INTENT_DEPT, 
+      INTENT_DEPT2, JOIN_REASON, WANT_GAIN, 
+      JOIN_DATE, RESUME_PATH, CREATE_TIME, 
+      UPDATE_TIME)
     values (#{id,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{certId,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{otherName,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
-      #{nation,jdbcType=VARCHAR}, #{dept,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, 
-      #{marriage,jdbcType=VARCHAR}, #{polity,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{status,jdbcType=VARCHAR}, #{originalPlace,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, 
-      #{healthStatus,jdbcType=VARCHAR}, #{birthDate,jdbcType=VARCHAR}, #{hobby,jdbcType=VARCHAR}, 
-      #{advantage,jdbcType=VARCHAR}, #{intentDept,jdbcType=VARCHAR}, #{intentDept2,jdbcType=VARCHAR}, 
-      #{joinReason,jdbcType=VARCHAR}, #{wantGain,jdbcType=VARCHAR}, #{joinDate,jdbcType=VARCHAR}, 
-      #{resumePath,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE}
-      )
+      #{nation,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, #{dept,jdbcType=VARCHAR}, 
+      #{office,jdbcType=VARCHAR}, #{marriage,jdbcType=VARCHAR}, #{polity,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{originalPlace,jdbcType=VARCHAR}, 
+      #{nativePlace,jdbcType=VARCHAR}, #{healthStatus,jdbcType=VARCHAR}, #{birthDate,jdbcType=VARCHAR}, 
+      #{hobby,jdbcType=VARCHAR}, #{advantage,jdbcType=VARCHAR}, #{intentDept,jdbcType=VARCHAR}, 
+      #{intentDept2,jdbcType=VARCHAR}, #{joinReason,jdbcType=VARCHAR}, #{wantGain,jdbcType=VARCHAR}, 
+      #{joinDate,jdbcType=VARCHAR}, #{resumePath,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.MemberPo" >
     insert into member
@@ -96,6 +100,9 @@
       </if>
       <if test="nation != null" >
         NATION,
+      </if>
+      <if test="degree != null" >
+        DEGREE,
       </if>
       <if test="dept != null" >
         DEPT,
@@ -189,6 +196,9 @@
       <if test="nation != null" >
         #{nation,jdbcType=VARCHAR},
       </if>
+      <if test="degree != null" >
+        #{degree,jdbcType=VARCHAR},
+      </if>
       <if test="dept != null" >
         #{dept,jdbcType=VARCHAR},
       </if>
@@ -281,6 +291,9 @@
       <if test="nation != null" >
         NATION = #{nation,jdbcType=VARCHAR},
       </if>
+      <if test="degree != null" >
+        DEGREE = #{degree,jdbcType=VARCHAR},
+      </if>
       <if test="dept != null" >
         DEPT = #{dept,jdbcType=VARCHAR},
       </if>
@@ -357,10 +370,12 @@
   <update id="updateByPrimaryKey" parameterType="cn.wchwu.model.busin.MemberPo">
     update member
     set OPERATOR_ID = #{operatorId,jdbcType=INTEGER},
+      CERT_ID = #{certId,jdbcType=VARCHAR},
       NAME = #{name,jdbcType=VARCHAR},
       OTHER_NAME = #{otherName,jdbcType=VARCHAR},
       GENDER = #{gender,jdbcType=VARCHAR},
       NATION = #{nation,jdbcType=VARCHAR},
+      DEGREE = #{degree,jdbcType=VARCHAR},
       DEPT = #{dept,jdbcType=VARCHAR},
       OFFICE = #{office,jdbcType=VARCHAR},
       MARRIAGE = #{marriage,jdbcType=VARCHAR},
@@ -480,4 +495,13 @@
         and UPDATE_TIME = #{record.updateTime,jdbcType=DATE}
       </if>
   </select>
+  
+  <update id="deleteBatch" >
+  	update member
+    set STATUS = '9'
+     where ID in 
+     <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+          #{item}       
+     </foreach> 
+  </update>
 </mapper>

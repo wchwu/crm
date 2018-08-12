@@ -48,6 +48,15 @@ public interface MemberService extends IService<MemberPo> {
     MemberVo getMemberById(Integer id);
 
     /**
+     * getMemberId:查询成员ID
+     * 
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年8月12日 下午7:17:32
+     */
+    int getMemberId();
+
+    /**
      * update:更新
      * 
      * @param record

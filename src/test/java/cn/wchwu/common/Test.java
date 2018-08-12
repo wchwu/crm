@@ -17,7 +17,7 @@ import java.io.FileReader;
 
 public class Test {
     public static void main(String[] args) {
-        File file = new File("E:/crm/dept.txt");
+        File file = new File("E:/crm/grade.txt");
         System.out.println(txt2String(file));
     }
 
@@ -29,8 +29,10 @@ public class Test {
             int i = 0;
             while ((s = br.readLine()) != null) {// 使用readLine方法，一次读一行
                 i++;
-                String[] split = s.split(" ");
-                result.append(System.lineSeparator() + insertSql(split[0], split[1], i));
+                // String[] split = s.split(" ");
+                // result.append(System.lineSeparator() + insertSql(split[0],
+                // split[1], i));
+                result.append(System.lineSeparator() + insertSql(s.substring(0, 2), s.substring(2), i));
             }
             br.close();
         } catch (Exception e) {
@@ -42,7 +44,7 @@ public class Test {
     public static String insertSql(String dictId, String dictName, int sortno) {
         String sql = "insert into sys_dict_entry(dicttypeid, dictid, dictname, STATUS, sortno, rank, parentid, seqno, filter1, filter2 ) ";
         sql += "values(";
-        sql += "'DEPT',";
+        sql += "'DEGREE',";
         sql += "'" + dictId + "',";
         sql += "'" + dictName + "',";
         sql += "'0',";

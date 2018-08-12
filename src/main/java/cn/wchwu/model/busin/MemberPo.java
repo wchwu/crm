@@ -8,7 +8,7 @@ public class MemberPo implements Serializable {
      * serialVersionUID:TODO（用一句话描述这个变量表示什么）
      */
 
-    private static final long serialVersionUID = -3264329252293964506L;
+    private static final long serialVersionUID = 473716964802946139L;
 
     private Integer id;
 
@@ -23,6 +23,8 @@ public class MemberPo implements Serializable {
     private String gender;
 
     private String nation;
+
+    private String degree;
 
     private String dept;
 
@@ -124,6 +126,14 @@ public class MemberPo implements Serializable {
 
     public void setNation(String nation) {
         this.nation = nation == null ? null : nation.trim();
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree == null ? null : degree.trim();
     }
 
     public String getDept() {

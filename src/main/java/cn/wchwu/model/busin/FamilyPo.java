@@ -18,6 +18,8 @@ public class FamilyPo implements Serializable {
 
     private String office;
 
+    private String tel;
+
     private String address;
 
     private Integer sort;
@@ -76,6 +78,14 @@ public class FamilyPo implements Serializable {
 
     public void setOffice(String office) {
         this.office = office == null ? null : office.trim();
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel == null ? null : tel.trim();
     }
 
     public String getAddress() {

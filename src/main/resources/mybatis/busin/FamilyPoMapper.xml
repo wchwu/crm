@@ -8,13 +8,15 @@
     <result column="RELATION" property="relation" jdbcType="VARCHAR" />
     <result column="WORK_UNIT" property="workUnit" jdbcType="VARCHAR" />
     <result column="OFFICE" property="office" jdbcType="VARCHAR" />
+    <result column="TEL" property="tel" jdbcType="VARCHAR" />
     <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
     <result column="SORT" property="sort" jdbcType="INTEGER" />
     <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, MEMBER_ID, NAME, RELATION, WORK_UNIT, OFFICE, ADDRESS, SORT, CREATE_TIME, UPDATE_TIME
+    ID, MEMBER_ID, NAME, RELATION, WORK_UNIT, OFFICE, TEL, ADDRESS, SORT, CREATE_TIME, 
+    UPDATE_TIME
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wchwu.model.busin.FamilyPo" >
     select 
@@ -29,16 +31,22 @@
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.wchwu.model.busin.FamilyPo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_FAMILY') 
+    </selectKey>
     insert into family (ID, MEMBER_ID, NAME, 
       RELATION, WORK_UNIT, OFFICE, 
-      ADDRESS, SORT, CREATE_TIME, 
-      UPDATE_TIME)
+      TEL, ADDRESS, SORT, 
+      CREATE_TIME, UPDATE_TIME)
     values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{relation,jdbcType=VARCHAR}, #{workUnit,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}, 
-      #{updateTime,jdbcType=DATE})
+      #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.FamilyPo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_FAMILY') 
+    </selectKey>
     insert into family
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -58,6 +66,9 @@
       </if>
       <if test="office != null" >
         OFFICE,
+      </if>
+      <if test="tel != null" >
+        TEL,
       </if>
       <if test="address != null" >
         ADDRESS,
@@ -91,6 +102,9 @@
       <if test="office != null" >
         #{office,jdbcType=VARCHAR},
       </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
       <if test="address != null" >
         #{address,jdbcType=VARCHAR},
       </if>
@@ -120,6 +134,9 @@
       <if test="office != null" >
         OFFICE = #{office,jdbcType=VARCHAR},
       </if>
+      <if test="tel != null" >
+        TEL = #{tel,jdbcType=VARCHAR},
+      </if>
       <if test="address != null" >
         ADDRESS = #{address,jdbcType=VARCHAR},
       </if>
@@ -142,6 +159,7 @@
       RELATION = #{relation,jdbcType=VARCHAR},
       WORK_UNIT = #{workUnit,jdbcType=VARCHAR},
       OFFICE = #{office,jdbcType=VARCHAR},
+      TEL = #{tel,jdbcType=VARCHAR},
       ADDRESS = #{address,jdbcType=VARCHAR},
       SORT = #{sort,jdbcType=INTEGER},
       CREATE_TIME = #{createTime,jdbcType=DATE},
@@ -154,6 +172,7 @@
     select 
     <include refid="Base_Column_List" />
     from family
-    where ID = #{id,jdbcType=INTEGER}
+    where MEMBER_ID = #{id,jdbcType=INTEGER}
+    order by sort asc 
   </select>
 </mapper>

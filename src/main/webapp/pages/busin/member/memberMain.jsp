@@ -23,8 +23,10 @@
 						<tr>
 							<th>电话</th>
 							<td><input class="easyui-validatebox" name="member.tel" /></td>
-							<th></th>
+							<th>状态</th>
 							<td>
+								<select id="status" name="member.status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',required:false,defaultIndex: 0">
+								</select>  
 							</td>
 						</tr>
 						<tr>
@@ -53,20 +55,21 @@
 			">
 				<thead>
 					<tr>
-						<th data-options="field:'id', width: '15%'" class="text-align:center">成员编号</th>
-						<th data-options="field:'name', width: '20%'" class="text-align:center">成员姓名 </th>
-						<th data-options="field:'certId', width: '20%'" class="text-align:center">证件号码</th>
-						<th data-options="field:'genderName', width: '10%'" class="text-align:center">性别</th>
-						<th data-options="field:'nationName', width: '10%'">民族</th>
-						<th data-options="field:'deptName', width: '10%'">部门</th>
-						<th data-options="field:'office', width: '10%'">职务</th>
-						<th data-options="field:'marriageName', width: '10%'">婚姻</th>
-						<th data-options="field:'polityName', width: '10%'">政治面貌</th>
-						<th data-options="field:'tel', width: '10%'">联系电话</th>
+						<th data-options="field:'id', width: '5%'" class="text-align:center">成员编号</th>
+						<th data-options="field:'name', width: '5%'" class="text-align:center">成员姓名 </th>
+						<th data-options="field:'certId', width: '5%'" class="text-align:center">证件号码</th>
+						<th data-options="field:'genderName', width: '3%'" class="text-align:center">性别</th>
+						<th data-options="field:'nationName', width: '5%'">民族</th>
+						<th data-options="field:'deptName', width: '5%'">部门</th>
+						<th data-options="field:'office', width: '5%'">职务</th>
+						<th data-options="field:'degree', width: '5%'">学历</th>
+						<th data-options="field:'marriageName', width: '5%'">婚姻</th>
+						<th data-options="field:'polityName', width: '5%'">政治面貌</th>
+						<th data-options="field:'tel', width: '8%'">联系电话</th>
 						<th data-options="field:'address', width: '10%'">地址</th>
 						<th data-options="field:'companyAddr', width: '10%'">公司地址</th>
 						<th data-options="field:'email', width: '10%'">邮箱地址</th>
-						<th data-options="field:'statusName', width: '10%'">状态</th>
+						<th data-options="field:'statusName', width: '5%'">状态</th>
 						<th data-options="field:'originalPlace', width: '10%'">祖籍</th>
 						<th data-options="field:'nativePlace', width: '10%'">籍贯</th>
 						<th data-options="field:'health_status', width: '10%'">健康状况</th>
@@ -94,8 +97,8 @@
 						title : '新增成员',
 						url : SYS.contextPath + '/pages/busin/member/memberInput.jsp',
 						resizable : true,
-						width: '70%',
-						height: '65%',
+						width: '80%',
+						height: '80%',
 						ctlDom: $('#tb-member')
 					});
 				}
@@ -112,8 +115,8 @@
 							title : '编辑成员信息',
 							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?id=' + rows[0].id,
 							resizable : true,
-							width: '70%',
-							height: '65%',
+							width: '80%',
+							height: '80%',
 							ctlDom: $('#tb-member')
 						});
 					}
@@ -151,7 +154,8 @@
 							       success: function(data, textStatus, jqXHR) {
 										if (data.success == "0") {
 											$.messager.show({title: "提示", msg: "操作成功" });
-											$('#tb-member').datagrid('reload');
+											//$('#tb-member').datagrid('reload');
+											$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
 										} else {
 											top.$.messager.alert('提示', data.errorMsg, 'error');
 										}

@@ -26,6 +26,9 @@
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.wchwu.model.busin.CertificatePo" >
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_CERTIFICATE') 
+    </selectKey>
     insert into certificate (ID, MEMBER_ID, GAIN_DATE, 
       PRIZE, SORT, CREATE_TIME, 
       UPDATE_TIME)
@@ -34,6 +37,9 @@
       #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.CertificatePo" >
+    <selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_CERTIFICATE')
+    </selectKey>
     insert into certificate
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -119,6 +125,6 @@
     select 
     <include refid="Base_Column_List" />
     from certificate
-    where ID = #{id,jdbcType=INTEGER}
+    where MEMBER_ID = #{id,jdbcType=INTEGER}
   </select>
 </mapper>

@@ -4,7 +4,7 @@
 <%@page import="cn.wchwu.model.sys.SysOperator"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
-	SysOperator operator = (SysOperator) session
+	SysOperator operator = (SysOperator) request.getSession()
 			.getAttribute(AuthorityFilter.SESSION_KEY_OPERATOR);
 %>
 <!DOCTYPE html>

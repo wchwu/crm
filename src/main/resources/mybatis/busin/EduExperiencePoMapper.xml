@@ -31,6 +31,9 @@
       and MEMBER_ID = #{memberId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.wchwu.model.busin.EduExperiencePo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_EDU_EXPERIENCE') 
+    </selectKey>
     insert into edu_experience (ID, MEMBER_ID, START_DATE, 
       END_DATE, SCHOOL, MAJOR, 
       DEGREE, FULL_TIME_FLAG, SORT, 
@@ -41,6 +44,9 @@
       #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.EduExperiencePo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_EDU_EXPERIENCE') 
+    </selectKey>
     insert into edu_experience
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -166,6 +172,6 @@
     select 
     <include refid="Base_Column_List" />
     from edu_experience
-    where ID = #{id,jdbcType=INTEGER}
+    where MEMBER_ID = #{id,jdbcType=INTEGER}
   </select>
 </mapper>

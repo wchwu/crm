@@ -16,11 +16,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.wchwu.dao.busin.CertificatePoMapper;
-import cn.wchwu.dao.busin.EduExperiencePoMapper;
-import cn.wchwu.dao.busin.FamilyPoMapper;
 import cn.wchwu.dao.busin.MemberPoMapper;
-import cn.wchwu.dao.busin.WorkExperiencePoMapper;
 import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.model.busin.MemberPo;
 import cn.wchwu.model.busin.vo.MemberVo;
@@ -39,14 +35,6 @@ public class MemberServiceImpl extends BaseService<MemberPo> implements MemberSe
 
     @Autowired
     private MemberPoMapper memberPoMapper;
-    @Autowired
-    private EduExperiencePoMapper eduExperiencePoMapper;
-    @Autowired
-    private FamilyPoMapper familyPoMapper;
-    @Autowired
-    private WorkExperiencePoMapper workExperiencePoMapper;
-    @Autowired
-    private CertificatePoMapper certificatePoMapper;
 
     /**
      * queryList:查询成员列表
@@ -68,13 +56,7 @@ public class MemberServiceImpl extends BaseService<MemberPo> implements MemberSe
 
     public int save(MemberPo memberPo) {
         int ret = 0;
-        if (null == memberPo.getId()) {
-            // 新增
-            ret = memberPoMapper.insertSelective(memberPo);
-        } else {
-            // 更新
-            ret = memberPoMapper.updateByPrimaryKeySelective(memberPo);
-        }
+        ret = memberPoMapper.insertSelective(memberPo);
         return ret;
     }
 
@@ -116,11 +98,16 @@ public class MemberServiceImpl extends BaseService<MemberPo> implements MemberSe
             return null;
         }
         vo.setMemberPo(memberPo);
-        vo.setEduExperienceList(eduExperiencePoMapper.queryListById(id));
-        vo.setFamilyList(familyPoMapper.queryListById(id));
-        vo.setWorkExperienceList(workExperiencePoMapper.queryListById(id));
-        vo.setCertificateList(certificatePoMapper.queryListById(id));
+        // vo.setEduExperienceList(eduExperiencePoMapper.queryListById(id));
+        // vo.setFamilyList(familyPoMapper.queryListById(id));
+        // vo.setWorkExperienceList(workExperiencePoMapper.queryListById(id));
+        // vo.setCertificateList(certificatePoMapper.queryListById(id));
         return vo;
 
+    }
+
+    @Override
+    public int getMemberId() {
+        return memberPoMapper.getMemberId();
     }
 }

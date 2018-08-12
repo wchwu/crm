@@ -80,6 +80,19 @@
 					</td>
 				</tr>
 				<tr>
+					<th>职务</th>
+					<td>
+						<input class="easyui-validatebox" type="text" name="office" data-options="required:true" />
+					</td>
+					<th>学历</th>
+					<td>
+						<select name="degree" style="width: 200px;"class="easyui-combobox" id="degree"  data-options="dictTypeId: 'DEGREE',required:true" >
+						</select>
+					</td>
+					<th></th>
+					<td></td>
+				</tr>
+				<tr>
 					<th>联系电话</th>
 					<td>
 						<input class="easyui-validatebox" type="text" name="tel" data-options="required:true" />
@@ -92,7 +105,7 @@
 					<td>
 						<select id="status" name="status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',required:true,defaultIndex: 0">
 						</select>  
-					<th></th>
+					</td>
 				</tr>
 			</table>
 		</fieldset>
@@ -114,132 +127,105 @@
 		</fieldset>
 		<hr/>
 		<fieldset>
-			<legend>家庭情况及主要社会关系 &nbsp;&nbsp;&nbsp;&nbsp;<span class="btnLink" style="color:#0e90d2;">添加</span></legend>
-			<table class="table" style="width: 100%;">
+			<legend>家庭情况及主要社会关系 </legend>
+			<table id="tab_family" class="easyui-datagrid"
+				data-options="
+				    iconCls: 'icon-save',
+				    fit: false,
+				    autoRowHeight: false,
+				    border:false,
+				    fitColumns: true,
+				    rownumbers:true,
+				    singleSelect: true
+				">
 				<thead>
 					<tr>
-					<th>姓名</th>
-					<th>关系</th>
-					<th>工作单位</th>
-					<th>职务</th>
-					<th>联系电话</th>
-					<th>联系地址</th>
-				</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
+						<th data-options="field:'memberId',hidden: true"></th>
+						<th	data-options="field:'name', width:'10%', editor:{type: 'textbox', options: {required:true, missingMessage: '不能为空'}}">姓名</th>
+						<th	data-options="field:'relation', width:'10%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">关系</th>
+						<th data-options="field:'workUnit', width:'20%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">工作单位</th>
+						<th data-options="field:'office', width:'10%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">职务</th>
+						<th data-options="field:'tel', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">联系电话</th>
+						<th data-options="field:'address', width:'20%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">联系地址</th>
+						<th	data-options="field:'sort', width:'5%', editor: {type:'numberbox'}">排序</th>
 					</tr>
-				</tbody>
+				</thead>
 			</table>
 		</fieldset>
 		<hr/>
 		<fieldset>
-			<legend>工  作  经  历&nbsp;&nbsp;&nbsp;&nbsp;<span class="btnLink" style="color:#0e90d2;">添加</span></legend>
-			<table class="table" style="width: 100%;">
+			<legend>工  作  经  历</legend>
+			<table id="tab_workExperience" class="easyui-datagrid" 
+				data-options="
+				    iconCls: 'icon-save',
+				    fit: false,
+				    autoRowHeight: false,
+				    border:false,
+				    fitColumns: true,
+				    rownumbers:true,
+				    singleSelect: true
+				">
 				<thead>
 					<tr>
-						<th>起止时间</th>
-						<th>工 作 单 位</th>
-						<th>职务</th>
-						<th>工作内容简述</th>
+						<th data-options="field:'memberId',hidden: true"></th>
+						<th data-options="field:'startDate',width:'10%',validType:'length[6,6]',editor: {type: 'textbox'}">时间（起）</th>
+						<th data-options="field:'endDate',width:'10%',validType:'length[6,6]',editor: {type: 'textbox'}">时间（止）</th>
+						<th data-options="field:'workUnit', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">工 作 单 位</th>
+						<th data-options="field:'office', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">职务</th>
+						<th data-options="field:'workDesc', width:'35%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">工作内容简述</th>
+						<th	data-options="field:'sort', width:'5%', editor: {type:'numberbox'}">排序</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<input class="easyui-datebox" type="text" />~
-							<input class="easyui-datebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-					</tr>
-				</tbody>
 			</table>
 		</fieldset>
 		<hr/>
 		<fieldset>
-			<legend>教  育  经  历&nbsp;&nbsp;&nbsp;&nbsp;<span class="btnLink" style="color:#0e90d2;">添加</span></legend>
-			<table class="table" style="width: 100%;">
+			<legend>教  育  经  历</legend>
+			<table id="tab_eduExperience" class="easyui-datagrid" 
+				data-options="
+				    iconCls: 'icon-save',
+				    fit: false,
+				    autoRowHeight: false,
+				    border:false,
+				    fitColumns: true,
+				    rownumbers:true,
+				    singleSelect: true
+				">
 				<thead>
 					<tr>
-						<th>起止时间</th>
-						<th>毕业/就读 院 校</th>
-						<th>专 业</th>
-						<th>学 历</th>
-						<th>学 位</th>
-						<th>是否全日制</th>
+						<th data-options="field:'memberId',hidden: true"></th>
+						<th data-options="field:'startDate',width:'10%',validType:'length[6,6]',editor: {type: 'textbox'}">时间（起）</th>
+						<th data-options="field:'endDate',width:'10%',validType:'length[6,6]',editor: {type: 'textbox'}">时间（止）</th>
+						<th data-options="field:'school', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">毕业/就读 院 校</th>
+						<th data-options="field:'major', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">专 业</th>
+						<th data-options="field:'degree', width:'15%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">学 历</th>
+						<th data-options="field:'fullTimeFlag',dictTypeId: 'YES_OR_NO',required:true,defaultIndex: 0,editor: {type: 'combobox', options:{required:true, missingMessage: '不能为空'}}">是否全日制</th>
+						<th	data-options="field:'sort', width:'5%', editor: {type:'numberbox'}">排序</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>
-							<input class="easyui-datebox" type="text" />~
-							<input class="easyui-datebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-						<td>
-							<input class="easyui-validatebox" type="text" />
-						</td>
-					</tr>
-				</tbody>
 			</table>
 		</fieldset>
 		<hr/>
 		<fieldset>
-			<legend>取  得  证书/获奖/职业资格认证  情  况&nbsp;&nbsp;&nbsp;&nbsp;<span class="btnLink" style="color:#0e90d2;">添加</span></legend>
-			<table class="table" style="width: 100%;">
+			<legend>取  得  证书/获奖/职业资格认证  情  况</legend>
+			<table id="tab_certificate" class="easyui-datagrid" 
+				data-options="
+				    iconCls: 'icon-save',
+				    fit: false,
+				    autoRowHeight: false,
+				    border:false,
+				    fitColumns: true,
+				    rownumbers:true,
+				    singleSelect: true
+				">
 				<thead>
 					<tr>
-						<th>证书/奖项 名称</th>
-						<th>获得日期</th>
+						<th data-options="field:'memberId',hidden: true"></th>
+						<th data-options="field:'prize', width:'70%', editor: {type: 'textbox', options:{required:true, missingMessage: '不能为空'}}">证书/奖项 名称</th>
+						<th data-options="field:'gainDate',width:'10%',validType:'length[6,6]',editor: {type: 'textbox'}">获得日期</th>
+						<th	data-options="field:'sort', width:'5%', editor: {type:'numberbox'}">排序</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td width="80%">
-							<input class="easyui-validatebox" type="text"    size="50"/>
-						</td>
-						<td width="20%">
-							<input class="easyui-datebox" type="text"   size="5"/>
-						</td>
-					</tr>
-				</tbody>
 			</table>
 		</fieldset>
 		<hr/>
@@ -253,7 +239,7 @@
 					</td>
 					<th>特长</th>
 					<td>
-						<input class="easyui-validatebox" type="text" name="comanyAddr"/>
+						<input class="easyui-validatebox" type="text" name="advantage"/>
 					</td>
 				</tr>
 			</table>
@@ -290,142 +276,8 @@
 		</fieldset>
 	</form>
 </body>
-<script type="text/javascript">
-function ww4(date){ 
- var y = date.getFullYear(); 
- var m = date.getMonth()+1; 
- var d = date.getDate(); 
- var h = date.getHours(); 
- return y+(m<10?('0'+m):m)+(d<10?('0'+d):d); 
-   
-} 
-function w4(s){ 
- var reg=/[\u4e00-\u9fa5]/ //利用正则表达式分隔 
- var ss = (s.split(reg)); 
- var y = parseInt(ss[0],10); 
- var m = parseInt(ss[1],10); 
- var d = parseInt(ss[2],10); 
- if (!isNaN(y) && !isNaN(m) && !isNaN(d)){ 
-  return new Date(y,m-1,d); 
- } else { 
-  return new Date(); 
- } 
-} 
+<jsp:include page="/pages/common/commonJs.jsp"></jsp:include>
+<script type="text/javascript" src="${ctx}/js/util/util.js?version=${version}"></script>
+<script type="text/javascript" src="${ctx}/js/busin/member/memberInput.js?version=${version}"></script>
 
-function myformatter(date){
-    var y = date.getFullYear();
-    var m = date.getMonth()+1;
-    var d = date.getDate();
-    return y+''+(m<10?('0'+m):m)+''+(d<10?('0'+d):d);
-}
-
-function myparser(s){
-    if (!s) return new Date();
-    var ss = (s.split('-'));
-    var y = parseInt(ss[0],10);
-    var m = parseInt(ss[1],10);
-    var d = parseInt(ss[2],10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)){
-        return new Date(y,m-1,d);
-    } else {
-        return new Date();
-    }
-}
-	$(function() {
-		//修改：根据Id去后台查询数据，让后加载到form
-		if ($('#ipt_memberId').val().length > 0) {
-			top.$.messager.progress({
-				text : '数据加载中....'
-			}); 
-			$.post(SYS.contextPath + '/member/getMemberById.action', {
-				id: $('#ipt_memberId').val()
-			}, function(result) {
-				console.log(result);
-				result = eval("("+result+")");
-				if (result.memberPo.id != undefined) {
-					$('form').form('load', {
-						'id' : result.memberPo.id,
-						'name' : null2Str(result.memberPo.name),
-						'certId' : null2Str(result.memberPo.certId),
-						'gender' : null2Str(result.memberPo.gender),
-						'nation' : null2Str(result.memberPo.nation),
-						'dept' : null2Str(result.memberPo.dept),
-						'office' : null2Str(result.memberPo.office),
-						'marriage' : null2Str(result.memberPo.marriage),
-						'polity' : null2Str(result.memberPo.polity),
-						'tel' : null2Str(result.memberPo.tel),
-						'address' : null2Str(result.memberPo.address),
-						'companyAddr' : null2Str(result.memberPo.companyAddr),
-						'email' : null2Str(result.memberPo.email),
-						'status' : null2Str(result.memberPo.status),
-						'nativePlace' : null2Str(result.memberPo.nativePlace),
-						'originalPlace' : null2Str(result.memberPo.originalPlace),
-						'healthStatus' : null2Str(result.memberPo.healthStatus),
-						'birthDate' : null2Str(result.memberPo.birthDate),
-						'hobby' : null2Str(result.memberPo.hobby),
-						'advantage' : null2Str(result.memberPo.advantage),
-						'joinReason' : null2Str(result.memberPo.joinReason),
-						'wantGain' : null2Str(result.memberPo.wantGain),
-						'joinDate' : null2Str(result.memberPo.joinDate),
-						'joinDate' : null2Str(result.memberPo.joinDate)
-					});
-					
-					//$("select[name='gender']").combobox('setValue',null2Str(result.memberPo.gender));
-				}
-				top.$.messager.progress('close');
-			}, 'json');
-		}
-	});
-	
-	//关闭窗口
-	function closeDialog(isRefresh) {
-		var $dialog = parent.$('#dialog_' + window.name);
-		if ($dialog) {
-			var opts = $dialog.dialog('options');
-			if (isRefresh && opts.ctlDom) {
-				opts.ctlDom.datagrid('reload');
-			}
-			$dialog.dialog('close');
-		} else {
-			window.close();
-		}
-	}
-	
-	//提交表单
-	function submitForm() {
-	    var url;
-	    if ($('form').form('validate')) {
-	        if ($('#ipt_memberId').val().length > 0) {
-	            url = SYS.contextPath + '/member/updateMember.action';
-	        } else {
-	        	url = SYS.contextPath + '/member/addMember.action';
-	        }
-	        var param = {};
-	        param.member = SYS.serializeObject($('form'));
-	        
-	        console.log(SYS.serializeObject($('form')));
-	        $.post(url, SYS.serializeObject($('form')), function(result) {
-				if (result.success == '0') {
-					top.$.messager.show({title: "提示", msg: "操作成功" });
-					closeDialog(true);
-				} else {
-					top.$.messager.alert('提示', result.errorMsg, 'error');
-				}
-			}, 'json');
-	    }
-	}
-	
-	function isEmpty(str){
-		return (str == null || str === "" || str == "undefined" || str == "null");
-	}
-	
-	function null2Str(str){
-		if(isEmpty(str)){
-			return "";
-		}
-		return str;
-	}
-	
-	
-</script>
 </html>
