@@ -1,9 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="cn.wchwu.framework.utils.DateUtil"%>
+<%@page import="org.apache.commons.lang3.time.DateUtils"%>
+<%@page import="cn.wchwu.web.filter.AuthorityFilter"%>
+<%@page import="cn.wchwu.model.sys.SysOperator"%>
+<%
+	SysOperator operator = (SysOperator) request.getSession()
+			.getAttribute(AuthorityFilter.SESSION_KEY_OPERATOR);
+%>
 <%--头部页面 --%>
 <%
 	String contextPath = request.getContextPath();
 %>
 <div id="sessionInfoDiv" style="position: absolute; right: 10px; top: 5px;">
+
 	<%
 			//out.print("欢迎您，管理员");
 	%>
@@ -12,6 +21,7 @@
 	<img src="<%=contextPath %>/style/images/logo.png" />
 </div>
 <div style="position: absolute; right: 0px; bottom: 0px;">
+	您好，<span style="color: #f90b46;font-weight: bold;"><%=operator.getRealName()%>(<%=operator.getLoginName() %>)</span>
 	<a href="javascript:void(0);" class="easyui-menubutton" data-options="menu:'#layout_north_kzmbMenu',iconCls:'ext-icon-cog'">控制面板</a> 
 </div>
 
