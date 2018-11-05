@@ -1,7 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%
 	String id = request.getParameter("id");
-	String op = request.getParameter("op");
 	if (id == null) {
 		id = "";
 	}
@@ -15,8 +14,7 @@
 </head>
 <body>
 	<form method="post" class="form">
-		<input type="hidden" id="upt_memberId" value="<%=id %>" name="id"/>
-		<input type="hidden" id="op" value="<%=op %>" name="op"/>
+		<input type="hidden" id="ipt_memberId" value="<%=id %>" name="id"/>
 		<fieldset>
 			<legend>基本信息</legend>
 			<table class="table" style="width: 100%;">
@@ -27,7 +25,7 @@
 					</td>
 					<th>性别</th>
 					<td>
-						 <select name="gender" style="width: 200px;" class="easyui-combobox" id="gender"  data-options="dictTypeId: 'SYS_GENDER',required:true" >
+						 <select name="gender" style="width: 200px;"class="easyui-combobox" id="gender"  data-options="dictTypeId: 'SYS_GENDER',required:true" >
 						</select>
 					</td>
 					<th>籍贯</th>
@@ -128,7 +126,7 @@
 			</table>
 		</fieldset>
 		<hr/>
-		<fieldset id="ft_tab_family">
+		<fieldset>
 			<legend>家庭情况及主要社会关系 </legend>
 			<table id="tab_family" class="easyui-datagrid"
 				data-options="
@@ -155,7 +153,7 @@
 			</table>
 		</fieldset>
 		<hr/>
-		<fieldset id="ft_tab_workExperience">
+		<fieldset>
 			<legend>工  作  经  历</legend>
 			<table id="tab_workExperience" class="easyui-datagrid" 
 				data-options="
@@ -181,7 +179,7 @@
 			</table>
 		</fieldset>
 		<hr/>
-		<fieldset id="ft_tab_eduExperience">
+		<fieldset>
 			<legend>教  育  经  历</legend>
 			<table id="tab_eduExperience" class="easyui-datagrid" 
 				data-options="
@@ -208,7 +206,7 @@
 			</table>
 		</fieldset>
 		<hr/>
-		<fieldset id="fs_tab_eduExperience">
+		<fieldset>
 			<legend>取  得  证书/获奖/职业资格认证  情  况</legend>
 			<table id="tab_certificate" class="easyui-datagrid" 
 				data-options="
@@ -265,30 +263,7 @@
 			</table>
 		</fieldset>
 		<hr/>
-		<hr/>
 		<fieldset>
-			<legend>附件<input type="file" name="upload" id="upload" style="display: none;"> </legend>
-			<table class="table" style="width: 100%;" id="tab_file" class="easyui-datagrid" 
-				data-options="
-				    iconCls: 'icon-save',
-				    fit: false,
-				    autoRowHeight: false,
-				    border:false,
-				    fitColumns: true,
-				    rownumbers:true,
-				    singleSelect: true
-				">
-				<thead>
-					<tr>
-						<th data-options="field:'memberId',hidden: true"></th>
-						<th data-options="field:'fileType', width:'30%', editor: {type:'combobox', options:{dictTypeId: 'FILE_TYPE',required:true, missingMessage: '不能为空'}}">文件类型</th>
-						<th data-options="field:'fileName',width:'50%',editor: {type: 'text',options:{required:true, missingMessage: '不能为空'}}">文件名称</th>
-						<th	data-options="field:'fileSize', width:'30%', editor: {type:'text'}">文件大小</th>
-					</tr>
-				</thead>
-			</table>
-		</fieldset>
-		<fieldset id="fs_submit">
 			<legend></legend>
 			<table class="table" style="width: 100%;">
 			<tr>
@@ -304,6 +279,5 @@
 <jsp:include page="/pages/common/commonJs.jsp"></jsp:include>
 <script type="text/javascript" src="${ctx}/js/util/util.js?version=${version}"></script>
 <script type="text/javascript" src="${ctx}/js/busin/member/memberInput.js?version=${version}"></script>
-<script type="text/javascript" src="${ctx }/uploadify/jquery.uploadify.js?version=${version}"></script>
 
 </html>

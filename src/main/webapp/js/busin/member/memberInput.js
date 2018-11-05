@@ -1,9 +1,28 @@
 var _memberId = 0;
+var authority = 'readOnly' ;
+var op = $('#op').val() ;
 $(function() {
-	var memberId = $('#ipt_memberId').val();
+	var memberId = $('#upt_memberId').val();
 	_memberId = memberId;
 	console.log("memberId:"+memberId);
 	// 修改：根据Id去后台查询数据，让后加载到form
+	baseInfo(memberId)
+	
+	if(isEmpty(memberId)){
+		_memberId = getMemberId();
+	}
+	familyTab(_memberId,'tab_family');
+	workExperienceTab(_memberId,'tab_workExperience');
+	eduExperienceTab(_memberId,'tab_eduExperience');
+	certificateTab(_memberId,'tab_certificate');
+	fileTab(_memberId,'tab_file');
+	
+	if(op == 'detail'){
+		$('#fs_submit').hide();
+	}
+});
+
+function baseInfo(memberId){
 	if (memberId.length > 0) {
 		top.$.messager.progress({
 			text : '数据加载中....'
@@ -45,23 +64,14 @@ $(function() {
 			top.$.messager.progress('close');
 		}, 'json');
 	}
-	
-	if(isEmpty(memberId)){
-		_memberId = getMemberId();
-	}
-	familyTab(_memberId);
-	workExperienceTab(_memberId);
-	eduExperienceTab(_memberId);
-	certificateTab(_memberId);
-});
+}
 
 //家庭背景情况
-var familyQueryParams;
 var dg_family = $('#tab_family');
-function familyTab(memberId) {
+function familyTab(memberId,tabId) {
 	console.log("family_menmberId:"+memberId);
 	
-	familyQueryParams = {
+	var familyQueryParams = {
 		'memberId' : memberId
 	};
 	var editRow = undefined; // 定义全局变量：当前编辑的行
@@ -72,6 +82,7 @@ function familyTab(memberId) {
 				url: SYS.contextPath + '/member/getFamilyById.action',
 				queryParams: familyQueryParams,
 				toolbar: [{
+					id: tabId + '_add',
 					text: '新增',
 					iconCls: 'icon-add',
 					handler: function() {
@@ -83,6 +94,7 @@ function familyTab(memberId) {
 				},
 				'-',
 				{
+					id: tabId + '_edit',
 					text: '修改',
 					iconCls: 'icon-edit',
 					handler: function() {
@@ -95,6 +107,7 @@ function familyTab(memberId) {
 				},
 				'-',
 				{
+					id: tabId + '_remove',
 					text: '删除',
 					iconCls: 'icon-remove',
 					handler: function() {
@@ -106,6 +119,7 @@ function familyTab(memberId) {
 					}
 				},
 				'-', {
+					id: tabId + '_undo',
 					text: "取消修改",
 					iconCls: "icon-undo",
 					handler: function() {
@@ -113,6 +127,7 @@ function familyTab(memberId) {
 					}
 				},
 				'-', {
+					id: tabId + '_save',
 					text: "保存",
 					iconCls: "icon-save",
 					handler: function() {
@@ -151,7 +166,10 @@ function familyTab(memberId) {
 						}
 					}
 				}
-				]
+				],
+				onLoadSuccess:function(){
+			    	detailButtonHandle(tabId);
+				}
 			});
 }
 
@@ -159,10 +177,10 @@ function familyTab(memberId) {
 //工作经历情况
 var workExperienceQueryParams;
 var dg_workExperience = $('#tab_workExperience');
-function workExperienceTab(memberId) {
+function workExperienceTab(memberId,tabId) {
 	console.log("workExperience_menmberId:"+memberId);
 	
-	workExperienceQueryParams = {
+	var workExperienceQueryParams = {
 		'memberId' : memberId
 	};
 	var editRow = undefined; // 定义全局变量：当前编辑的行
@@ -252,7 +270,10 @@ function workExperienceTab(memberId) {
 						}
 					}
 				}
-				]
+				],
+				onLoadSuccess:function(){
+		    	detailButtonHandle(tabId);
+				}
 			});
 }
 
@@ -263,10 +284,10 @@ function workExperienceTab(memberId) {
 //教育经历情况
 var eduExperienceQueryParams;
 var dg_eduExperience = $('#tab_eduExperience');
-function eduExperienceTab(memberId) {
+function eduExperienceTab(memberId,tabId) {
 	console.log("eduExperience_menmberId:"+memberId);
 	
-	eduExperienceQueryParams = {
+	var eduExperienceQueryParams = {
 		'memberId' : memberId
 	};
 	var editRow = undefined; // 定义全局变量：当前编辑的行
@@ -356,7 +377,10 @@ function eduExperienceTab(memberId) {
 						}
 					}
 				}
-				]
+				],
+				onLoadSuccess:function(){
+			    	detailButtonHandle(tabId);
+				}
 			});
 }
 
@@ -364,10 +388,10 @@ function eduExperienceTab(memberId) {
 //获奖情况
 var certificateQueryParams;
 var dg_certificate = $('#tab_certificate');
-function certificateTab(memberId) {
+function certificateTab(memberId,tabId) {
 	console.log("workExperience_menmberId:"+memberId);
 	
-	certificateQueryParams = {
+	var certificateQueryParams = {
 		'memberId' : memberId
 	};
 	var editRow = undefined; // 定义全局变量：当前编辑的行
@@ -457,16 +481,211 @@ function certificateTab(memberId) {
 						}
 					}
 				}
-				]
+				],
+				onLoadSuccess:function(){
+			    	detailButtonHandle(tabId);
+				}
 			});
 }
+
+var dg_file = $('#tab_file');
+function fileTab(memberId,tabId){
+		var fileQueryParams = {
+			'memberId' : memberId
+		};
+		var editRow = undefined; // 定义全局变量：当前编辑的行
+		dg_file.datagrid(
+				{
+					title : '附件列表',
+					pagination: false,
+					url: SYS.contextPath + '/member/getFileById.action',
+					queryParams: fileQueryParams,
+					toolbar: [{
+						text: '上传',
+						iconCls: 'icon-add',
+						handler: function() {
+							$('#upload').click();
+//							var $dom = dg_file,
+//							rows = $dom.datagrid('getRows');
+//							$dom.datagrid('appendRow', {memberId: memberId,fileName:'XXX的简历',fileSize:'30KB'});
+//							$dom.datagrid('beginEdit', rows.length - 1);
+						}
+					},
+					'-',
+					{
+						text: '修改',
+						iconCls: 'icon-edit',
+						handler: function() {
+							var row = dg_file.datagrid('getSelected');
+							if (row) {
+								var rowIndex = dg_file.datagrid('getRowIndex', row);
+								dg_file.datagrid('beginEdit', rowIndex);
+							}
+						}
+					},
+					'-',
+					{
+						text: '删除',
+						iconCls: 'icon-remove',
+						handler: function() {
+							var row = dg_file.datagrid('getSelected');
+							if (row) {
+								var rowIndex = dg_file.datagrid('getRowIndex', row);
+								dg_file.datagrid('deleteRow', rowIndex);
+							}
+						}
+					},
+					'-', {
+						text: "取消修改",
+						iconCls: "icon-undo",
+						handler: function() {
+							dg_file.datagrid('rejectChanges');
+						}
+					},
+					'-', {
+						text: "保存",
+						iconCls: "icon-save",
+						handler: function() {
+							var rows = dg_file.datagrid('getRows');
+							for (var i = 0; i < rows.length; i++) {
+								dg_file.datagrid('endEdit', i);
+							}
+							if (dg_file.datagrid("getChanges").length) {
+								var inserted = dg_file.datagrid('getChanges', "inserted");
+								var deleted = dg_file.datagrid('getChanges', "deleted");
+								var updated = dg_file.datagrid('getChanges', "updated");
+
+								var effectRow = new Object();
+								if (inserted.length) {
+									effectRow["inserted"] = JSON.stringify(inserted);
+								}
+								if (deleted.length) {
+									effectRow["deleted"] = JSON.stringify(deleted);
+								}
+								if (updated.length) {
+									effectRow["updated"] = JSON.stringify(updated);
+								}
+								$.post(SYS.contextPath + "/member/saveFile.action", effectRow,
+								function(rsp) {
+									if (rsp.success) {
+										$.messager.show({title: "提示", msg: "操作成功" });
+										editIndex = undefined;
+										dg_file.datagrid('acceptChanges').datagrid('reload');
+									}
+								},
+								"JSON").error(function(rsp) {
+									$.messager.alert("提示", "提交错误了！" + rsp);
+								});
+							} else {
+								$.messager.alert("提示", "未做修改！");
+							}
+						}
+					},'-',
+					{
+						id: tabId + '_download',
+						text: '下载',
+						iconCls: 'icon-filter',
+						handler: function() {
+							var row = dg_file.datagrid('getSelected');
+							if (row) {
+								var rowIndex = dg_file.datagrid('getRowIndex', row);
+								dg_file.datagrid('deleteRow', rowIndex);
+							}
+						}
+					},
+					],
+					onLoadSuccess:function(){
+				    	detailButtonHandle(tabId);
+					}
+				});
+}
+
+function detailButtonHandle(tabId){
+	if(op == 'detail'){
+		//if(authority.indexOf('readOnly') != -1){
+		console.log("XXXXX");
+		
+		//$('#'+tabId + ' .datagrid-toolbar').hide();
+		console.log('#fs_'+ tabId +' .datagrid .datagrid-toolbar');
+		
+		//$('#fs_'+ tabId +' .datagrid .datagrid-toolbar').hide();
+		
+		//$('#fs_tab_family .datagrid .datagrid-toolbar').hide();
+		$('.datagrid .datagrid-toolbar').hide();
+		
+		//$('#'+tabId + '_add').hide();
+		//$('#'+tabId + '_edit').hide();
+//		$('#'+tabId + '_remove').hide();
+//		$('#'+tabId + '_undo').hide();
+//		$('#'+tabId + '_save').hide();
+	}
+}
+
+function file_upload(file_upload_id,div_files_id){
+	//添加界面的附件管理
+	$(file_upload_id)
+			.uploadify(
+					{
+						'swf' : SYS.contextPath+'/uploadify/uploadify.swf', //FLash文件路径
+						'buttonText' : '浏  览', //按钮文本
+						'uploader' : SYS.contextPath+'/file/upload.action', //处理文件上传Action
+						'queueID' : 'fileQueue', //队列的ID
+						'queueSizeLimit' : 10, //队列最多可上传文件数量，默认为999
+						'auto' : true, //选择文件后是否自动上传，默认为true
+						'multi' : true, //是否为多选，默认为true
+						'removeCompleted' : true, //是否完成后移除序列，默认为true
+						'fileSizeLimit' : '10MB', //单个文件大小，0为无限制，可接受KB,MB,GB等单位的字符串值
+						'fileTypeDesc' : 'Image Files', //文件描述
+						//'progressData' : 'percentage',
+						'fileTypeExts' : '*.gif; *.jpg; *.png; *.bmp;*.tif;*.doc;*.docx;*.xls;*.xlsx;*.zip;*.pdf', //上传的文件后缀过滤器
+						'onQueueComplete' : function(event, data) { //所有队列完成后事件
+							//ShowUpFiles($("#Attachment_GUID").val(), "div_files");  //完成后更新已上传的文件列表
+							//$.messager.alert("提示", "上传完毕！"); //提示完成           
+						},
+						'onUploadStart' : function(file) {
+							 /*$("#file_upload").uploadify(
+									"settings",
+									'formData',
+									{
+										'folder' : '政策法规',
+										'guid' : $("#Attachment_GUID")
+												.val()
+									}); //动态传参数 
+*/						},
+						'onUploadError' : function(event, queueId, fileObj,
+								errorObj) {
+							//alert(errorObj.type + "：" + errorObj.info);
+						},
+						'onFallback' : function() { //Flash无法加载错误  
+							alert("您未安装FLASH控件，无法上传！请安装FLASH控件后再试。");
+						},
+						'onUploadError' : function(file, errorCode,
+								errorMsg) { //上传失败  
+							alert(file.name + "上传失败，<br/>错误信息：" + errorMsg);
+						},
+						'onUploadSuccess' : function(file, data, response) {
+							//alert(file.name+"--"+data+"-"+response)
+							//alert(file.name + ' 上传成功！ ');
+							//data = eval(data) ;
+							data=eval('('+data+')') ;
+							//console.log(data.fileSize) ;
+							
+							//addfile(div_files_id,data.attachUuid,file.name,data.fileSize,data);
+						},
+						'onComplete' : function(event, queueID, fileObj,
+								response, data) {
+							
+						}
+					});
+}
+
 // 提交表单
 function submitForm() {
 	var url;
 	if ($('form').form('validate')) {
 		var param = {};
 		param = SYS.serializeObject($('form'));
-		var ipt_memberId = $('#ipt_memberId').val();
+		var ipt_memberId = $('#upt_memberId').val();
 		
 		if (ipt_memberId.length > 0) {
 			url = SYS.contextPath + '/member/updateMember.action';

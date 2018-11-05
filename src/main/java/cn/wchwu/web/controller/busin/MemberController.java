@@ -20,6 +20,7 @@ import cn.wchwu.framework.spring.mvc.bind.annotation.FormModel;
 import cn.wchwu.model.busin.CertificatePo;
 import cn.wchwu.model.busin.EduExperiencePo;
 import cn.wchwu.model.busin.FamilyPo;
+import cn.wchwu.model.busin.FileRecPo;
 import cn.wchwu.model.busin.MemberPo;
 import cn.wchwu.model.busin.WorkExperiencePo;
 import cn.wchwu.model.busin.vo.MemberVo;
@@ -27,6 +28,7 @@ import cn.wchwu.model.sys.FillDictEntityModel;
 import cn.wchwu.service.busin.CertificateService;
 import cn.wchwu.service.busin.EduExperienceService;
 import cn.wchwu.service.busin.FamilyService;
+import cn.wchwu.service.busin.FileRecService;
 import cn.wchwu.service.busin.MemberService;
 import cn.wchwu.service.busin.WorkExperienceService;
 import cn.wchwu.service.sys.SysDictService;
@@ -52,6 +54,8 @@ public class MemberController {
     private EduExperienceService eduExperienceService;
     @Autowired
     private CertificateService certificateService;
+    @Autowired
+    private FileRecService fileRecService;
 
     @Autowired
     private SysDictService sysDictService;
@@ -320,6 +324,42 @@ public class MemberController {
         }
 
         certificateService.saveCertificateBatch(deletedList, insertedList, updatedList);
+
+        JSONObject rsJson = new JSONObject();
+        rsJson.put("success", "0");
+        return rsJson;
+    }
+
+    @RequestMapping("getFileById")
+    @ResponseBody
+    public JSONObject getFileById(@RequestParam(value = "memberId", required = false) Integer memberId) {
+        JSONObject rsJson = new JSONObject();
+        List<FileRecPo> list = new ArrayList<>();
+        if (null != memberId && memberId != 0) {
+            list = fileRecService.queryListById(memberId);
+        }
+        rsJson.put("rows", list);
+        rsJson.put("total", list.size());
+        return rsJson;
+    }
+
+    @RequestMapping(value = "saveFile")
+    @ResponseBody
+    public JSONObject saveFile(String deleted, String inserted, String updated) {
+        List<FileRecPo> deletedList = null;
+        List<FileRecPo> insertedList = null;
+        List<FileRecPo> updatedList = null;
+        if (deleted != null) {
+            deletedList = JSON.parseArray(deleted, FileRecPo.class);
+        }
+        if (inserted != null) {
+            insertedList = JSON.parseArray(inserted, FileRecPo.class);
+        }
+        if (updated != null) {
+            updatedList = JSON.parseArray(updated, FileRecPo.class);
+        }
+
+        fileRecService.saveFileBatch(deletedList, insertedList, updatedList);
 
         JSONObject rsJson = new JSONObject();
         rsJson.put("success", "0");

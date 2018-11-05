@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wchwu.dao.busin.FileRecPoMapper" >
+  <resultMap id="BaseResultMap" type="cn.wchwu.model.busin.FileRecPo" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <id column="MEMBER_ID" property="memberId" jdbcType="INTEGER" />
+    <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_SIZE" property="fileSize" jdbcType="DECIMAL" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, MEMBER_ID, FILE_TYPE, FILE_NAME, FILE_SIZE, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wchwu.model.busin.FileRecPo" >
+    select 
+    <include refid="Base_Column_List" />
+    from file_rec
+    where ID = #{id,jdbcType=INTEGER}
+      and MEMBER_ID = #{memberId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="cn.wchwu.model.busin.FileRecPo" >
+    delete from file_rec
+    where ID = #{id,jdbcType=INTEGER}
+      and MEMBER_ID = #{memberId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.wchwu.model.busin.FileRecPo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_FILE_REC')
+    </selectKey>
+    insert into file_rec (ID, MEMBER_ID, FILE_TYPE, 
+      FILE_NAME, FILE_SIZE, CREATE_TIME, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{memberId,jdbcType=INTEGER}, #{fileType,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}, 
+      #{updateTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.wchwu.model.busin.FileRecPo" >
+  	<selectKey keyProperty="id" resultType="int" order="BEFORE">  
+        select func_nextval('SEQ_FILE_REC')
+    </selectKey>
+    insert into file_rec
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="memberId != null" >
+        MEMBER_ID,
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberId != null" >
+        #{memberId,jdbcType=INTEGER},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.wchwu.model.busin.FileRecPo" >
+    update file_rec
+    <set >
+      <if test="fileType != null" >
+        FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSize != null" >
+        FILE_SIZE = #{fileSize,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=DATE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+      and MEMBER_ID = #{memberId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.wchwu.model.busin.FileRecPo" >
+    update file_rec
+    set FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_SIZE = #{fileSize,jdbcType=DECIMAL},
+      CREATE_TIME = #{createTime,jdbcType=DATE},
+      UPDATE_TIME = #{updateTime,jdbcType=DATE}
+    where ID = #{id,jdbcType=INTEGER}
+      and MEMBER_ID = #{memberId,jdbcType=INTEGER}
+  </update>
+  
+  <select id="queryListById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from file_rec
+    where MEMBER_ID = #{id,jdbcType=INTEGER}
+  </select>
+</mapper>

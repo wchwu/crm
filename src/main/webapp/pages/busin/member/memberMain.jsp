@@ -90,12 +90,32 @@
 	$(function() {
 		$('#tb-member').datagrid({
 			toolbar: [{
+				id: 'detail',
+				text: '查看',
+				iconCls: 'icon-search',
+				handler: function() {
+					var rows = $('#tb-member').datagrid('getChecked');
+					if (rows.length != 1) {
+						$.messager.alert('提示', '请选择一行进行查看！', 'warning');
+					} else {
+						top.SYS.modalDialog({
+							title : '查看成员',
+							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=detail&id=' + rows[0].id ,
+							resizable : true,
+							width: '80%',
+							height: '80%',
+							ctlDom: $('#tb-member')
+						});
+					}
+				}
+			},{
+				id: 'addMember',
 				text: '新增',
 				iconCls: 'icon-add',
 				handler: function() {
 					top.SYS.modalDialog({
 						title : '新增成员',
-						url : SYS.contextPath + '/pages/busin/member/memberInput.jsp',
+						url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=add&op=add',
 						resizable : true,
 						width: '80%',
 						height: '80%',
@@ -104,6 +124,7 @@
 				}
 			},
 			{
+				id: 'updateMember',
 				text: '修改',
 				iconCls: 'icon-edit',
 				handler: function() {
@@ -113,7 +134,7 @@
 					} else {
 						top.SYS.modalDialog({
 							title : '编辑成员信息',
-							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?id=' + rows[0].id,
+							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=edit&id=' + rows[0].id,
 							resizable : true,
 							width: '80%',
 							height: '80%',
@@ -123,6 +144,7 @@
 				}
 			},
 			{
+				id: 'deleteMember',
 				text: '删除',
 				iconCls: 'icon-remove',
 				handler: function() {
@@ -165,9 +187,18 @@
 						});
 					}
 				}
-			}]
+			}],
+			onLoadSuccess:function(){
+		    	buttonHandle();
+			}
 		});
 	});
+	
+	function buttonHandle(){
+		//$('#addMember').hide();
+		//$('#updateMember').hide();
+		//$('#deleteMember').hide();
+	}
 </script>
 </body>
 </html>
