@@ -7,7 +7,6 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,6 +19,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.wchwu.model.busin.vo.FileEntity;
+import cn.wchwu.util.ConfigUtil;
 
 /**
  * 类的描述：
@@ -68,11 +68,11 @@ public class FileController {
                         String contentType = file.getContentType();
                         long fileSize = (long) ((file.getSize()) / 1024);
                         // 定义上传路径
-                        String uploadRootPath = PropertyConfigurer.getContextProperty("upload.root.path"); // web端根目录
-                        String uploadPath = PropertyConfigurer.getContextProperty("upload.path"); // web相对路径目录
+                        String uploadRootPath = ConfigUtil.getPropertyValue("upload.root.path"); // web端根目录
+                        String uploadPath = ConfigUtil.getPropertyValue("upload.path"); // web相对路径目录
                         String path = uploadRootPath + uploadPath;
-                        path = FileUtil.getFileDirectory(path);
-                        String newFileName = FileUtil.getNewFileName(fileName);
+                        // path = FileUtil.getFileDirectory(path);
+                        String newFileName = fileName;
                         String lastFilePath = path + newFileName;
                         log.info("上传后的文件： " + lastFilePath); // 上传后的原始文件
                         // attach.setAttachId(attachId);
@@ -91,7 +91,8 @@ public class FileController {
             int endtime = (int) System.currentTimeMillis();
             log.info("上传文件：" + count + "个,花费：" + (endtime - starttime) + "毫秒");
         }
-        return JSONObject.fromObject(fe);
+        // return JSONObject.fromObject(fe);
+        return null;
     }
 
 }
