@@ -27,6 +27,8 @@ public class FileEntity implements Serializable {
 
     private static final long serialVersionUID = -4583806074766045339L;
 
+    private Integer id;
+
     /**
      * 文件名
      */
@@ -75,6 +77,14 @@ public class FileEntity implements Serializable {
 
     public void setFileType(String fileType) {
         this.fileType = fileType;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 }

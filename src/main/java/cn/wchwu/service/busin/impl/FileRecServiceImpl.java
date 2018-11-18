@@ -1,15 +1,13 @@
 
 package cn.wchwu.service.busin.impl;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cn.wchwu.dao.busin.FileRecPoMapper;
 import cn.wchwu.model.busin.FileRecPo;
 import cn.wchwu.service.busin.FileRecService;
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
@@ -71,6 +69,31 @@ public class FileRecServiceImpl extends BaseService<FileRecPo> implements FileRe
                 fileRecPoMapper.deleteByPrimaryKey(po);
             }
         }
+    }
+
+    @Override
+    public int getFileId() {
+        return fileRecPoMapper.getFileId();
+    }
+
+    @Override
+    public int insertFileRec(FileRecPo record) {
+        return fileRecPoMapper.insertSelective(record);
+    }
+
+    @Override
+    public int updateFileRec(FileRecPo record) {
+        return fileRecPoMapper.updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public int deleteFileRec(Integer id) {
+        return fileRecPoMapper.deleteFileRec(id);
+    }
+
+    @Override
+    public FileRecPo queryById(Integer id) {
+        return fileRecPoMapper.queryById(id);
     }
 
 }

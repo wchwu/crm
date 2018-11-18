@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>成员管理</title>
+	<title>干事管理</title>
 	<jsp:include page="/common.jsp"></jsp:include>
 </head>
 <body>
@@ -42,7 +42,7 @@
 		<!-- 成员信息列表-->
 		<div data-options="region:'center',split:false">
 			<table id="tb-member"  data-options="
-				url: SYS.contextPath + '/member/memberList.action?member.type=1',
+				url: SYS.contextPath + '/member/memberList.action?member.type=2',
 				view: SYS.datagrid.view,
 				emptyMsg: '没有数据',
 				fit: true,
@@ -149,48 +149,49 @@
 				iconCls: 'icon-remove',
 				handler: function() {
 					var rows = $('#tb-member').datagrid('getChecked'),
-						row_len = rows.length;
-					
-					if (row_len < 1) {
-						$.messager.alert('提示', '请选择要删除的数据！！', 'warning');
-					} else {
-						$.messager.confirm('确认', '你确定要删除[' + row_len +  ']条数据吗？', function(r) {
-							if (r) {
-								//定义变量，接收参数
-								var data = [],
-									idArr = [],
-									row;
-								
-								while (row_len--) {
-									row = rows[row_len];
-									idArr.push(row.id);
-								}
-								
-								for (var i in idArr) data.push({ name: 'ids', value: idArr[i] });
-								console.log(data);
-							    $.ajax({
-							       url: SYS.contextPath + "/member/del.action",
-							       data: data,
-							       dataType: "json",
-							       traditional: true,
-							       success: function(data, textStatus, jqXHR) {
-										if (data.success == "0") {
-											$.messager.show({title: "提示", msg: "操作成功" });
-											//$('#tb-member').datagrid('reload');
-											$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
-										} else {
-											top.$.messager.alert('提示', data.errorMsg, 'error');
-										}
-									}
-							    });
+					row_len = rows.length;
+				if (rows.length != 1) {
+					$.messager.alert('提示', '请选择一行进行修改！', 'warning');
+				} else {
+					$.messager.confirm('确认', '你确定要修改这[' + row_len +  ']条数据吗？', function(r) {
+						if (r) {
+							//定义变量，接收参数
+							var data = {"type":"2"},
+								idArr = [],
+								row;
+							while (row_len--) {
+								row = rows[row_len];
+								idArr.push(row.id);
 							}
-						});
+							var ids = '';
+							for (var i in idArr){
+								data.push({ name: 'ids', value: idArr[i] });
+								ids = idArr[i] + ',';
+							} 
+							ids = ids.substring(0,ids.length);
+							data.type = '1' ;
+						    $.ajax({
+						       url: SYS.contextPath + "/member/updateMemberBatch.action",
+						       data: data,
+						       dataType: "json",
+						       traditional: true,
+						       success: function(data, textStatus, jqXHR) {
+									if (data.success == "0") {
+										$.messager.show({title: "提示", msg: "操作成功" });
+										//$('#tb-member').datagrid('reload');
+										$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
+									} else {
+										top.$.messager.alert('提示', data.errorMsg, 'error');
+									}
+								}
+						    });
+						}
+					});
 					}
 				}
-			},
-			{
+			},{
 				id: 'transferTo',
-				text: '转为干事',
+				text: '转为志愿者',
 				iconCls: 'icon-redo',
 				handler: function() {
 					var rows = $('#tb-member').datagrid('getChecked'),
@@ -214,7 +215,7 @@
 									ids = idArr[i] + ',';
 								} 
 								ids = ids.substring(0,ids.length);
-								data.type = '2' ;
+								data.type = '1' ;
 							    $.ajax({
 							       url: SYS.contextPath + "/member/updateMemberBatch.action",
 							       data: data,
@@ -231,6 +232,14 @@
 									}
 							    });
 							}
+						});
+						top.SYS.modalDialog({
+							title : '转换信息',
+							url : SYS.contextPath + '/pages/busin/member/updateMember.action?member.type=1&id=' + rows[0].id,
+							resizable : true,
+							width: '80%',
+							height: '80%',
+							ctlDom: $('#tb-member')
 						});
 					}
 				}

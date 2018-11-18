@@ -40,14 +40,13 @@
 					<td>
 						<input class="easyui-validatebox" type="text" name="certId" data-options="required:true" />
 					</td>
-					<th>加入日期</th>
+					<th>出生日期</th>
 					<td>
-						 <input id="joinDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser,required:true" name="joinDate">
+						<input id="birthDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser,required:true" name="birthDate">
 					</td>
-					<th>部门</th>
+					<th>个人邮箱</th>
 					<td>
-						<select name="dept" style="width: 200px;"class="easyui-combobox" id="dept"  data-options="dictTypeId: 'DEPT',required:true" >
-						</select>
+						<input class="easyui-validatebox" type="text" name="email" data-options="required:true" />
 					</td>
 				</tr>
 				<tr>
@@ -56,13 +55,13 @@
 						<select name="nation" style="width: 200px;"class="easyui-combobox" id="nation"  data-options="dictTypeId: 'NATION',required:true" >
 						</select>
 					</td>
-					<th>出生日期</th>
-					<td>
-						<input id="birthDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser,required:true" name="birthDate">
-					</td>
 					<th>祖籍</th>
 					<td>
 						<input class="easyui-validatebox" type="text" name="originalPlace" data-options="required:true" />
+					</td>
+					<th>联系电话</th>
+					<td>
+						<input class="easyui-validatebox" type="text" name="tel" data-options="required:true" />
 					</td>
 				</tr>
 				<tr>
@@ -82,31 +81,38 @@
 					</td>
 				</tr>
 				<tr>
-					<th>职务</th>
-					<td>
-						<input class="easyui-validatebox" type="text" name="office" data-options="required:true" />
-					</td>
 					<th>学历</th>
 					<td>
 						<select name="degree" style="width: 200px;"class="easyui-combobox" id="degree"  data-options="dictTypeId: 'DEGREE',required:true" >
 						</select>
 					</td>
-					<th></th>
-					<td></td>
-				</tr>
-				<tr>
-					<th>联系电话</th>
-					<td>
-						<input class="easyui-validatebox" type="text" name="tel" data-options="required:true" />
-					</td>
-					<th>个人邮箱</th>
-					<td>
-						<input class="easyui-validatebox" type="text" name="email" data-options="required:true" />
-					</td>
 					<th>状态</th>
 					<td>
 						<select id="status" name="status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',required:true,defaultIndex: 0">
 						</select>  
+					</td>
+					<th></th>
+					<td></td>
+				</tr>
+			</table>
+		</fieldset>
+		<hr/>
+		<fieldset>
+			<legend>部门信息</legend>
+			<table class="table" style="width: 100%;">
+				<tr>
+					<th>加入日期</th>
+					<td>
+						 <input id="joinDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser,required:true" name="joinDate">
+					</td>
+					<th>部门</th>
+					<td>
+						<select name="dept" style="width: 200px;"class="easyui-combobox" id="dept"  data-options="dictTypeId: 'DEPT',required:true" >
+						</select>
+					</td>
+					<th>职务</th>
+					<td>
+						<input class="easyui-validatebox" type="text" name="office" data-options="required:true" />
 					</td>
 				</tr>
 			</table>
@@ -280,10 +286,13 @@
 				">
 				<thead>
 					<tr>
+						<th data-options="field:'id',hidden: true"></th>
 						<th data-options="field:'memberId',hidden: true"></th>
+						<!-- 
 						<th data-options="field:'fileType', width:'30%', editor: {type:'combobox', options:{dictTypeId: 'FILE_TYPE',required:true, missingMessage: '不能为空'}}">文件类型</th>
-						<th data-options="field:'fileName',width:'50%',editor: {type: 'text',options:{required:true, missingMessage: '不能为空'}}">文件名称</th>
-						<th	data-options="field:'fileSize', width:'30%', editor: {type:'text'}">文件大小</th>
+						 -->
+						<th data-options="field:'fileName', width:'76%'">文件名称</th>
+						<th	data-options="field:'fileSize', width:'20%'">文件大小(KB)</th>
 					</tr>
 				</thead>
 			</table>
@@ -291,7 +300,7 @@
 		<fieldset id="fs_submit">
 			<legend></legend>
 			<table class="table" style="width: 100%;">
-			<tr>
+				<tr>
 					<th colspan="4" style="text-align: center;">
 						<a href="#" class="easyui-linkbutton" onclick="javascript:submitForm();">保存</a>
 						<a href="#" class="easyui-linkbutton" onclick="javascript:closeDialog();">关闭</a>  
@@ -304,6 +313,8 @@
 <jsp:include page="/pages/common/commonJs.jsp"></jsp:include>
 <script type="text/javascript" src="${ctx}/js/util/util.js?version=${version}"></script>
 <script type="text/javascript" src="${ctx}/js/busin/member/memberInput.js?version=${version}"></script>
-<script type="text/javascript" src="${ctx }/uploadify/jquery.uploadify.js?version=${version}"></script>
+<script type="text/javascript" src="../../../js/fileupload/jquery.ui.widget.js?version=${version}"></script>
+<script type="text/javascript" src="../../../js/fileupload/jquery.iframe-transport.js?version=${version}"></script>
+<script type="text/javascript" src="../../../js/fileupload/jquery.fileupload.js?version=${version}"></script>
 
 </html>

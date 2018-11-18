@@ -17,6 +17,8 @@ $(function() {
 	certificateTab(_memberId,'tab_certificate');
 	fileTab(_memberId,'tab_file');
 	
+	upload(_memberId);
+	
 	if(op == 'detail'){
 		$('#fs_submit').hide();
 	}
@@ -504,23 +506,7 @@ function fileTab(memberId,tabId){
 						text: '上传',
 						iconCls: 'icon-add',
 						handler: function() {
-							$('#upload').click();
-//							var $dom = dg_file,
-//							rows = $dom.datagrid('getRows');
-//							$dom.datagrid('appendRow', {memberId: memberId,fileName:'XXX的简历',fileSize:'30KB'});
-//							$dom.datagrid('beginEdit', rows.length - 1);
-						}
-					},
-					'-',
-					{
-						text: '修改',
-						iconCls: 'icon-edit',
-						handler: function() {
-							var row = dg_file.datagrid('getSelected');
-							if (row) {
-								var rowIndex = dg_file.datagrid('getRowIndex', row);
-								dg_file.datagrid('beginEdit', rowIndex);
-							}
+							$("#upload").trigger("click");
 						}
 					},
 					'-',
@@ -530,57 +516,25 @@ function fileTab(memberId,tabId){
 						handler: function() {
 							var row = dg_file.datagrid('getSelected');
 							if (row) {
-								var rowIndex = dg_file.datagrid('getRowIndex', row);
-								dg_file.datagrid('deleteRow', rowIndex);
-							}
-						}
-					},
-					'-', {
-						text: "取消修改",
-						iconCls: "icon-undo",
-						handler: function() {
-							dg_file.datagrid('rejectChanges');
-						}
-					},
-					'-', {
-						text: "保存",
-						iconCls: "icon-save",
-						handler: function() {
-							var rows = dg_file.datagrid('getRows');
-							for (var i = 0; i < rows.length; i++) {
-								dg_file.datagrid('endEdit', i);
-							}
-							if (dg_file.datagrid("getChanges").length) {
-								var inserted = dg_file.datagrid('getChanges', "inserted");
-								var deleted = dg_file.datagrid('getChanges', "deleted");
-								var updated = dg_file.datagrid('getChanges', "updated");
-
-								var effectRow = new Object();
-								if (inserted.length) {
-									effectRow["inserted"] = JSON.stringify(inserted);
-								}
-								if (deleted.length) {
-									effectRow["deleted"] = JSON.stringify(deleted);
-								}
-								if (updated.length) {
-									effectRow["updated"] = JSON.stringify(updated);
-								}
-								$.post(SYS.contextPath + "/member/saveFile.action", effectRow,
+								$.post(SYS.contextPath + "/file/delFile.action", {id:row.id},
 								function(rsp) {
 									if (rsp.success) {
 										$.messager.show({title: "提示", msg: "操作成功" });
-										editIndex = undefined;
-										dg_file.datagrid('acceptChanges').datagrid('reload');
+										dg_file.datagrid('reload');
 									}
 								},
 								"JSON").error(function(rsp) {
 									$.messager.alert("提示", "提交错误了！" + rsp);
 								});
-							} else {
-								$.messager.alert("提示", "未做修改！");
+								
+								var rowIndex = dg_file.datagrid('getRowIndex', row);
+								dg_file.datagrid('deleteRow', rowIndex);
+							}else{
+								$.messager.alert("提示", "请选择一条数据！");
 							}
 						}
-					},'-',
+					},
+					'-',
 					{
 						id: tabId + '_download',
 						text: '下载',
@@ -588,8 +542,9 @@ function fileTab(memberId,tabId){
 						handler: function() {
 							var row = dg_file.datagrid('getSelected');
 							if (row) {
-								var rowIndex = dg_file.datagrid('getRowIndex', row);
-								dg_file.datagrid('deleteRow', rowIndex);
+								location.href = SYS.contextPath + "/file/download.action?id=" + row.id ;
+							}else{
+								$.messager.alert("提示", "请选择一条数据！");
 							}
 						}
 					},
@@ -619,6 +574,36 @@ function detailButtonHandle(tabId){
 //		$('#'+tabId + '_undo').hide();
 //		$('#'+tabId + '_save').hide();
 	}
+}
+
+function upload(memberId){
+		//文件上传
+	  $('#upload').fileupload({
+	    dataType: 'json',
+	    maxFileSize: 50 * 1000 * 1024,//单位B
+	    //acceptFileTypes: /(.|\/)(jpe?g|png|doc|docx|pdf)$/i,//文件格式限制
+	    url: SYS.contextPath+'/file/upload.action',
+	    done: function (e, data) {
+	    	console.log(data);
+	    	if(null != data && null != data.result.data && data.result.code == '0000'){
+	    		var f = data.result.data ;
+	      	
+	      	var $dom = dg_file,
+					rows = $dom.datagrid('getRows');
+	      	$dom.datagrid('appendRow', {id:f.id,memberId: memberId,fileName:f.fileName,fileSize:f.fileSize});
+	      	//$dom.datagrid('beginEdit', rows.length - 1);
+	    	}else{
+	    		alert(data.result.msg);
+	    	}
+	    }
+	  });
+	  
+	  //文件上传前触发事件
+	  $('#upload').bind('fileuploadsubmit', function (e, data) {
+	      data.formData = { memberId: memberId };  //如果需要额外添加参数可以在这里添加
+	  }).bind('fileuploadadd', function (e, data) {
+			//layerIndex = layer.load(0, { shade: [0.1, '#fff'] });
+		});
 }
 
 function file_upload(file_upload_id,div_files_id){
@@ -651,7 +636,8 @@ function file_upload(file_upload_id,div_files_id){
 										'guid' : $("#Attachment_GUID")
 												.val()
 									}); //动态传参数 
-*/						},
+									*/
+					  },
 						'onUploadError' : function(event, queueId, fileObj,
 								errorObj) {
 							//alert(errorObj.type + "：" + errorObj.info);
@@ -693,9 +679,9 @@ function submitForm() {
 			url = SYS.contextPath + '/member/addMember.action';
 			param.id = _memberId ;
 		}
-		
 
 		console.log(SYS.serializeObject($('form')));
+		
 		$.post(url, param, function(result) {
 			if (result.success == '0') {
 				top.$.messager.show({

@@ -13,6 +13,11 @@
   <sql id="Base_Column_List" >
     ID, MEMBER_ID, FILE_TYPE, FILE_NAME, FILE_SIZE, CREATE_TIME, UPDATE_TIME
   </sql>
+  
+  <select id="getFileId" resultType="int">
+  	select func_nextval('SEQ_FILE_REC') 
+  </select>
+  
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="cn.wchwu.model.busin.FileRecPo" >
     select 
     <include refid="Base_Column_List" />
@@ -127,4 +132,15 @@
     from file_rec
     where MEMBER_ID = #{id,jdbcType=INTEGER}
   </select>
+  
+  <select id="queryById" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from file_rec
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteFileRec" parameterType="java.lang.Integer">
+  	delete from file_rec where id = #{id,jdbcType=INTEGER}
+  </delete>
 </mapper>

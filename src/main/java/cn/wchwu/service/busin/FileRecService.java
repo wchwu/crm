@@ -11,9 +11,8 @@
 
 package cn.wchwu.service.busin;
 
-import java.util.List;
-
 import cn.wchwu.model.busin.FileRecPo;
+import java.util.List;
 
 /**
  * @description:文件记录
@@ -44,4 +43,14 @@ public interface FileRecService extends IService<FileRecPo> {
      * @date 2018年10月21日 下午11:52:02
      */
     public void saveFileBatch(List<FileRecPo> deletedList, List<FileRecPo> insertedList, List<FileRecPo> updatedList);
+
+    public int getFileId();
+
+    public int insertFileRec(FileRecPo record);
+
+    public int updateFileRec(FileRecPo record);
+
+    public int deleteFileRec(Integer id);
+
+    public FileRecPo queryById(Integer id);
 }

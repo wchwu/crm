@@ -3,6 +3,7 @@
 <mapper namespace="cn.wchwu.dao.busin.MemberPoMapper" >
   <resultMap id="BaseResultMap" type="cn.wchwu.model.busin.MemberPo" >
     <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="TYPE" property="type" jdbcType="VARCHAR" />
     <result column="OPERATOR_ID" property="operatorId" jdbcType="INTEGER" />
     <result column="CERT_ID" property="certId" jdbcType="VARCHAR" />
     <result column="NAME" property="name" jdbcType="VARCHAR" />
@@ -35,7 +36,7 @@
     <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEGREE, DEPT, OFFICE, 
+    ID, TYPE, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEGREE, DEPT, OFFICE, 
     MARRIAGE, POLITY, TEL, ADDRESS, COMPANY_ADDR, EMAIL, STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
     HEALTH_STATUS, BIRTH_DATE, HOBBY, ADVANTAGE, INTENT_DEPT, INTENT_DEPT2, JOIN_REASON, 
     WANT_GAIN, JOIN_DATE, RESUME_PATH, CREATE_TIME, UPDATE_TIME
@@ -54,34 +55,37 @@
     where ID = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.wchwu.model.busin.MemberPo" >
-    insert into member (ID, OPERATOR_ID, CERT_ID, 
-      NAME, OTHER_NAME, GENDER, 
-      NATION, DEGREE, DEPT, 
-      OFFICE, MARRIAGE, POLITY, 
-      TEL, ADDRESS, COMPANY_ADDR, 
-      EMAIL, STATUS, ORIGINAL_PLACE, 
-      NATIVE_PLACE, HEALTH_STATUS, BIRTH_DATE, 
-      HOBBY, ADVANTAGE, INTENT_DEPT, 
-      INTENT_DEPT2, JOIN_REASON, WANT_GAIN, 
-      JOIN_DATE, RESUME_PATH, CREATE_TIME, 
-      UPDATE_TIME)
-    values (#{id,jdbcType=INTEGER}, #{operatorId,jdbcType=INTEGER}, #{certId,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{otherName,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
-      #{nation,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, #{dept,jdbcType=VARCHAR}, 
-      #{office,jdbcType=VARCHAR}, #{marriage,jdbcType=VARCHAR}, #{polity,jdbcType=VARCHAR}, 
-      #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{originalPlace,jdbcType=VARCHAR}, 
-      #{nativePlace,jdbcType=VARCHAR}, #{healthStatus,jdbcType=VARCHAR}, #{birthDate,jdbcType=VARCHAR}, 
-      #{hobby,jdbcType=VARCHAR}, #{advantage,jdbcType=VARCHAR}, #{intentDept,jdbcType=VARCHAR}, 
-      #{intentDept2,jdbcType=VARCHAR}, #{joinReason,jdbcType=VARCHAR}, #{wantGain,jdbcType=VARCHAR}, 
-      #{joinDate,jdbcType=VARCHAR}, #{resumePath,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
-      #{updateTime,jdbcType=DATE})
+    insert into member (ID, TYPE, OPERATOR_ID, 
+      CERT_ID, NAME, OTHER_NAME, 
+      GENDER, NATION, DEGREE, 
+      DEPT, OFFICE, MARRIAGE, 
+      POLITY, TEL, ADDRESS, 
+      COMPANY_ADDR, EMAIL, STATUS, 
+      ORIGINAL_PLACE, NATIVE_PLACE, HEALTH_STATUS, 
+      BIRTH_DATE, HOBBY, ADVANTAGE, 
+      INTENT_DEPT, INTENT_DEPT2, JOIN_REASON, 
+      WANT_GAIN, JOIN_DATE, RESUME_PATH, 
+      CREATE_TIME, UPDATE_TIME)
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{operatorId,jdbcType=INTEGER}, 
+      #{certId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{otherName,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, 
+      #{dept,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, #{marriage,jdbcType=VARCHAR}, 
+      #{polity,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{companyAddr,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{originalPlace,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, #{healthStatus,jdbcType=VARCHAR}, 
+      #{birthDate,jdbcType=VARCHAR}, #{hobby,jdbcType=VARCHAR}, #{advantage,jdbcType=VARCHAR}, 
+      #{intentDept,jdbcType=VARCHAR}, #{intentDept2,jdbcType=VARCHAR}, #{joinReason,jdbcType=VARCHAR}, 
+      #{wantGain,jdbcType=VARCHAR}, #{joinDate,jdbcType=VARCHAR}, #{resumePath,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.MemberPo" >
     insert into member
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         ID,
+      </if>
+      <if test="type != null" >
+        TYPE,
       </if>
       <if test="operatorId != null" >
         OPERATOR_ID,
@@ -178,6 +182,9 @@
       <if test="id != null" >
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
       <if test="operatorId != null" >
         #{operatorId,jdbcType=INTEGER},
       </if>
@@ -273,6 +280,9 @@
   <update id="updateByPrimaryKeySelective" parameterType="cn.wchwu.model.busin.MemberPo" >
     update member
     <set >
+      <if test="type != null" >
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
       <if test="operatorId != null" >
         OPERATOR_ID = #{operatorId,jdbcType=INTEGER},
       </if>
@@ -369,7 +379,8 @@
   
   <update id="updateByPrimaryKey" parameterType="cn.wchwu.model.busin.MemberPo">
     update member
-    set OPERATOR_ID = #{operatorId,jdbcType=INTEGER},
+    set TYPE = #{type,jdbcType=VARCHAR},
+      OPERATOR_ID = #{operatorId,jdbcType=INTEGER},
       CERT_ID = #{certId,jdbcType=VARCHAR},
       NAME = #{name,jdbcType=VARCHAR},
       OTHER_NAME = #{otherName,jdbcType=VARCHAR},

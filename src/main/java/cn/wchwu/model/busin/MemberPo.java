@@ -12,6 +12,8 @@ public class MemberPo implements Serializable {
 
     private Integer id;
 
+    private String type;
+
     private Integer operatorId;
 
     private String certId;
@@ -78,6 +80,14 @@ public class MemberPo implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type == null ? null : type.trim();
     }
 
     public Integer getOperatorId() {

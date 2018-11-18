@@ -1,20 +1,5 @@
 package cn.wchwu.web.controller.busin;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-
 import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.framework.spring.mvc.bind.annotation.FormModel;
 import cn.wchwu.model.busin.CertificatePo;
@@ -32,9 +17,23 @@ import cn.wchwu.service.busin.FileRecService;
 import cn.wchwu.service.busin.MemberService;
 import cn.wchwu.service.busin.WorkExperienceService;
 import cn.wchwu.service.sys.SysDictService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
- * @description:(TODO 请在此添加描述)
+ * @description:成员controller
  * @reason:TODO ADD REASON(可选)
  * @author Chaowu.Wang
  * @date 2018年8月5日 下午9:36:48
@@ -120,6 +119,32 @@ public class MemberController {
         System.out.println("提交参数：" + JSONObject.toJSONString(member));
         JSONObject rsJson = new JSONObject();
         int ret = memberService.update(member);
+        if (ret > 0) {
+            rsJson.put("success", "0");
+        } else {
+            rsJson.put("success", "9");
+            rsJson.put("errorMsg", "操作失败");
+        }
+        return rsJson;
+    }
+
+    @RequestMapping("updateMemberBatch")
+    @ResponseBody
+    public JSONObject updateMemberBatch(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject rsJson = new JSONObject();
+        String ids = request.getParameter("ids");
+        String type = request.getParameter("type");
+        String[] idsArr = ids.split(",");
+        int ret = 0;
+        if (null != idsArr && idsArr.length > 0) {
+            for (int i = 0; i < idsArr.length; i++) {
+                MemberPo member = new MemberPo();
+                member.setId(Integer.valueOf(idsArr[i]));
+                member.setType(type);
+                ret += memberService.update(member);
+            }
+        }
+
         if (ret > 0) {
             rsJson.put("success", "0");
         } else {

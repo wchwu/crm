@@ -1,8 +1,7 @@
 package cn.wchwu.dao.busin;
 
-import java.util.List;
-
 import cn.wchwu.model.busin.FileRecPo;
+import java.util.List;
 
 public interface FileRecPoMapper {
     int deleteByPrimaryKey(FileRecPo key);
@@ -11,6 +10,8 @@ public interface FileRecPoMapper {
 
     int insertSelective(FileRecPo record);
 
+    int getFileId();
+
     FileRecPo selectByPrimaryKey(FileRecPo key);
 
     int updateByPrimaryKeySelective(FileRecPo record);
@@ -18,4 +19,8 @@ public interface FileRecPoMapper {
     int updateByPrimaryKey(FileRecPo record);
 
     List<FileRecPo> queryListById(Integer id);
+
+    int deleteFileRec(Integer id);
+
+    FileRecPo queryById(Integer id);
 }
