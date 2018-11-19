@@ -500,7 +500,7 @@ function fileTab(memberId,tabId){
 				{
 					title : '附件列表',
 					pagination: false,
-					url: SYS.contextPath + '/member/getFileById.action',
+					url: SYS.contextPath + '/file/queryListByMemberId.action',
 					queryParams: fileQueryParams,
 					toolbar: [{
 						text: '上传',
@@ -591,7 +591,6 @@ function upload(memberId){
 	      	var $dom = dg_file,
 					rows = $dom.datagrid('getRows');
 	      	$dom.datagrid('appendRow', {id:f.id,memberId: memberId,fileName:f.fileName,fileSize:f.fileSize});
-	      	//$dom.datagrid('beginEdit', rows.length - 1);
 	    	}else{
 	    		alert(data.result.msg);
 	    	}
@@ -600,70 +599,12 @@ function upload(memberId){
 	  
 	  //文件上传前触发事件
 	  $('#upload').bind('fileuploadsubmit', function (e, data) {
-	      data.formData = { memberId: memberId };  //如果需要额外添加参数可以在这里添加
+	      data.formData = { memberId: memberId,fileType:'10' };  //如果需要额外添加参数可以在这里添加
 	  }).bind('fileuploadadd', function (e, data) {
 			//layerIndex = layer.load(0, { shade: [0.1, '#fff'] });
 		});
 }
 
-function file_upload(file_upload_id,div_files_id){
-	//添加界面的附件管理
-	$(file_upload_id)
-			.uploadify(
-					{
-						'swf' : SYS.contextPath+'/uploadify/uploadify.swf', //FLash文件路径
-						'buttonText' : '浏  览', //按钮文本
-						'uploader' : SYS.contextPath+'/file/upload.action', //处理文件上传Action
-						'queueID' : 'fileQueue', //队列的ID
-						'queueSizeLimit' : 10, //队列最多可上传文件数量，默认为999
-						'auto' : true, //选择文件后是否自动上传，默认为true
-						'multi' : true, //是否为多选，默认为true
-						'removeCompleted' : true, //是否完成后移除序列，默认为true
-						'fileSizeLimit' : '10MB', //单个文件大小，0为无限制，可接受KB,MB,GB等单位的字符串值
-						'fileTypeDesc' : 'Image Files', //文件描述
-						//'progressData' : 'percentage',
-						'fileTypeExts' : '*.gif; *.jpg; *.png; *.bmp;*.tif;*.doc;*.docx;*.xls;*.xlsx;*.zip;*.pdf', //上传的文件后缀过滤器
-						'onQueueComplete' : function(event, data) { //所有队列完成后事件
-							//ShowUpFiles($("#Attachment_GUID").val(), "div_files");  //完成后更新已上传的文件列表
-							//$.messager.alert("提示", "上传完毕！"); //提示完成           
-						},
-						'onUploadStart' : function(file) {
-							 /*$("#file_upload").uploadify(
-									"settings",
-									'formData',
-									{
-										'folder' : '政策法规',
-										'guid' : $("#Attachment_GUID")
-												.val()
-									}); //动态传参数 
-									*/
-					  },
-						'onUploadError' : function(event, queueId, fileObj,
-								errorObj) {
-							//alert(errorObj.type + "：" + errorObj.info);
-						},
-						'onFallback' : function() { //Flash无法加载错误  
-							alert("您未安装FLASH控件，无法上传！请安装FLASH控件后再试。");
-						},
-						'onUploadError' : function(file, errorCode,
-								errorMsg) { //上传失败  
-							alert(file.name + "上传失败，<br/>错误信息：" + errorMsg);
-						},
-						'onUploadSuccess' : function(file, data, response) {
-							//alert(file.name+"--"+data+"-"+response)
-							//alert(file.name + ' 上传成功！ ');
-							//data = eval(data) ;
-							data=eval('('+data+')') ;
-							//console.log(data.fileSize) ;
-							
-							//addfile(div_files_id,data.attachUuid,file.name,data.fileSize,data);
-						},
-						'onComplete' : function(event, queueID, fileObj,
-								response, data) {
-							
-						}
-					});
-}
 
 // 提交表单
 function submitForm() {

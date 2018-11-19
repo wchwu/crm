@@ -30,6 +30,10 @@ public class WorkExperiencePo implements Serializable {
 
     private Integer memberId;
 
+    private String creator;
+
+    private String updater;
+
     public Integer getId() {
         return id;
     }
@@ -109,4 +113,21 @@ public class WorkExperiencePo implements Serializable {
     public void setSort(Integer sort) {
         this.sort = sort;
     }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
 }

@@ -32,6 +32,10 @@ public class EduExperiencePo implements Serializable {
 
     private Integer sort;
 
+    private String creator;
+
+    private String updater;
+
     public Integer getId() {
         return id;
     }
@@ -118,5 +122,21 @@ public class EduExperiencePo implements Serializable {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator == null ? null : creator.trim();
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater == null ? null : updater.trim();
     }
 }

@@ -1,10 +1,13 @@
 
 package cn.wchwu.web.controller.busin;
 
+import cn.wchwu.common.Constant;
 import cn.wchwu.model.busin.FileRecPo;
+import cn.wchwu.model.sys.SysOperator;
 import cn.wchwu.service.busin.FileRecService;
 import cn.wchwu.util.ConfigUtil;
 import cn.wchwu.util.StringUtil;
+import cn.wchwu.web.filter.AuthorityFilter;
 import com.alibaba.fastjson.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,8 +21,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,11 +60,11 @@ public class FileController {
     @ResponseBody
     public JSONObject upload(HttpServletRequest request, HttpServletResponse response) throws Exception {
         JSONObject rsJson = new JSONObject();
-        // Map<String, Object> paramsObj =
-        // HttpClientUtils.getParamsObj(request);
-        // log.info("参数：" + paramsObj);
+        SysOperator operator = (SysOperator) request.getSession().getAttribute(AuthorityFilter.SESSION_KEY_OPERATOR);
 
         String memberId = request.getParameter("memberId");
+        String ruleId = request.getParameter("ruleId");
+        String fileType = request.getParameter("fileType");
         // 创建一个通用的多部分解析器
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         // 判断 request 是否有文件上传,即多部分请求
@@ -87,9 +92,23 @@ public class FileController {
                         // 重命名上传后的文件名
                         String contentType = file.getContentType();
                         long fileSize = (long) ((file.getSize()) / 1024);
+
+                        fe.setFileType(fileType);
+                        fe.setFileName(fileName);
+                        fe.setFileSize(new BigDecimal(fileSize));
+                        fe.setId(fileId);
+
                         // 定义上传路径
                         String uploadRootPath = ConfigUtil.getPropertyValue("upload.root.path"); // 上传文件根目录
-                        String filePath = uploadRootPath + File.separator + memberId;
+
+                        String filePath = "";
+                        if (Constant.FILE_TYPE_MEMBER.equals(fe.getFileType())) {// 人员相关附件
+                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + memberId + File.separator + fe.getFileName();
+                            fe.setMemberId(Integer.valueOf(memberId));
+                        } else if (Constant.FILE_TYPE_RULE.equals(fe.getFileType())) {// 规则相关附件
+                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + ruleId + File.separator + fe.getFileName();
+                            fe.setRuleId(Integer.valueOf(ruleId));
+                        }
                         File f = new File(filePath);
                         if (!f.exists()) {
                             f.mkdirs();
@@ -114,13 +133,12 @@ public class FileController {
                             lastFilePath = filePath + File.separator + fileName;
                         }
                         log.info("上传后的文件： " + lastFilePath); // 上传后的原始文件
-                        fe.setFileName(fileName);
-                        fe.setFileSize(new BigDecimal(fileSize));
-                        fe.setId(fileId);
-                        fe.setMemberId(Integer.valueOf(memberId));
+
                         Date t = new Date();
+                        fe.setCreator(operator.getLoginName());
                         fe.setCreateTime(t);
                         fe.setUpdateTime(t);
+                        fe.setStatus(Constant.FILE_STATUS_OK);
                         fileRecService.insertFileRec(fe);
 
                         File localFile = new File(lastFilePath);
@@ -172,7 +190,13 @@ public class FileController {
         FileRecPo f = fileRecService.queryById(id);
         if (null != f) {
             String uploadRootPath = ConfigUtil.getPropertyValue("upload.root.path"); // 上传文件根目录
-            String path = uploadRootPath + File.separator + f.getMemberId() + File.separator + f.getFileName();
+            String path = "";
+            if (Constant.FILE_TYPE_MEMBER.equals(f.getFileType())) {
+                path = uploadRootPath + File.separator + f.getFileType() + File.separator + f.getMemberId() + File.separator + f.getFileName();
+            } else if (Constant.FILE_TYPE_RULE.equals(f.getFileType())) {
+                path = uploadRootPath + File.separator + f.getFileType() + File.separator + f.getRuleId() + File.separator + f.getFileName();
+            }
+
             this.downloadFile(path, request, response);
         }
     }
@@ -240,4 +264,31 @@ public class FileController {
         }
         return fileName;
     }
+
+    @RequestMapping("queryListByMemberId")
+    @ResponseBody
+    public JSONObject queryListByMemberId(@RequestParam(value = "memberId", required = false) Integer memberId) {
+        JSONObject rsJson = new JSONObject();
+        List<FileRecPo> list = new ArrayList<>();
+        if (null != memberId && memberId != 0) {
+            list = fileRecService.queryListByMemberId(memberId);
+        }
+        rsJson.put("rows", list);
+        rsJson.put("total", list.size());
+        return rsJson;
+    }
+
+    @RequestMapping("queryListByRuleId")
+    @ResponseBody
+    public JSONObject queryFileByRuleId(@RequestParam(value = "ruleId", required = true) Integer ruleId) {
+        JSONObject rsJson = new JSONObject();
+        List<FileRecPo> list = new ArrayList<>();
+        if (null != ruleId && ruleId != 0) {
+            list = fileRecService.queryListByRuleId(ruleId);
+        }
+        rsJson.put("rows", list);
+        rsJson.put("total", list.size());
+        return rsJson;
+    }
+
 }

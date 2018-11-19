@@ -83,16 +83,19 @@
 				<tr>
 					<th>学历</th>
 					<td>
-						<select name="degree" style="width: 200px;"class="easyui-combobox" id="degree"  data-options="dictTypeId: 'DEGREE',required:true" >
+						<select name="degree" style="width: 200px;"class="easyui-combobox" id="degree"  data-options="dictTypeId: 'DEGREE'" >
 						</select>
+					</td>
+					<th>加入日期</th>
+					<td>
+						 <input id="joinDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser" name="joinDate">
 					</td>
 					<th>状态</th>
 					<td>
-						<select id="status" name="status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',required:true,defaultIndex: 0">
+						<select id="status" name="status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',defaultIndex: 0">
 						</select>  
 					</td>
-					<th></th>
-					<td></td>
+					
 				</tr>
 			</table>
 		</fieldset>
@@ -101,10 +104,6 @@
 			<legend>部门信息</legend>
 			<table class="table" style="width: 100%;">
 				<tr>
-					<th>加入日期</th>
-					<td>
-						 <input id="joinDate" type="text" class="easyui-datebox" data-options="formatter:myformatter,parser:myparser,required:true" name="joinDate">
-					</td>
 					<th>部门</th>
 					<td>
 						<select name="dept" style="width: 200px;"class="easyui-combobox" id="dept"  data-options="dictTypeId: 'DEPT',required:true" >
@@ -114,6 +113,8 @@
 					<td>
 						<input class="easyui-validatebox" type="text" name="office" data-options="required:true" />
 					</td>
+					<th></th>
+					<td></td>
 				</tr>
 			</table>
 		</fieldset>

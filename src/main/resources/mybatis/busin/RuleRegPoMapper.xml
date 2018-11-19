@@ -4,18 +4,19 @@
   <resultMap id="BaseResultMap" type="cn.wchwu.model.busin.RuleRegPo" >
     <id column="ID" property="id" jdbcType="INTEGER" />
     <result column="RULE_TYPE" property="ruleType" jdbcType="VARCHAR" />
+    <result column="STATUS" property="status" jdbcType="VARCHAR" />
     <result column="RULE_NAME" property="ruleName" jdbcType="VARCHAR" />
     <result column="RULE_URL" property="ruleUrl" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
     <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="UPDATER" property="updater" jdbcType="VARCHAR" />
   </resultMap>
   <resultMap id="ResultMapWithBLOBs" type="cn.wchwu.model.busin.RuleRegPo" extends="BaseResultMap" >
     <result column="CONTENT" property="content" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, RULE_TYPE, RULE_NAME, RULE_URL, CREATE_TIME, CREATOR, UPDATE_TIME, UPDATER
+    ID, RULE_TYPE, STATUS, RULE_NAME, RULE_URL, CREATE_TIME, CREATOR, UPDATE_TIME, UPDATER
   </sql>
   <sql id="Blob_Column_List" >
     CONTENT
@@ -33,14 +34,14 @@
     where ID = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="cn.wchwu.model.busin.RuleRegPo" >
-    insert into rule_reg (ID, RULE_TYPE, RULE_NAME, 
-      RULE_URL, CREATE_TIME, CREATOR, 
-      UPDATE_TIME, UPDATER, CONTENT
-      )
-    values (#{id,jdbcType=INTEGER}, #{ruleType,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, 
-      #{ruleUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, #{creator,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=DATE}, #{updater,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}
-      )
+    insert into rule_reg (ID, RULE_TYPE, STATUS, 
+      RULE_NAME, RULE_URL, CREATE_TIME, 
+      CREATOR, UPDATE_TIME, UPDATER, 
+      CONTENT)
+    values (#{id,jdbcType=INTEGER}, #{ruleType,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{ruleName,jdbcType=VARCHAR}, #{ruleUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=DATE}, 
+      #{creator,jdbcType=VARCHAR}, #{updateTime,jdbcType=DATE}, #{updater,jdbcType=VARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.RuleRegPo" >
     insert into rule_reg
@@ -50,6 +51,9 @@
       </if>
       <if test="ruleType != null" >
         RULE_TYPE,
+      </if>
+      <if test="status != null" >
+        STATUS,
       </if>
       <if test="ruleName != null" >
         RULE_NAME,
@@ -80,6 +84,9 @@
       <if test="ruleType != null" >
         #{ruleType,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
       <if test="ruleName != null" >
         #{ruleName,jdbcType=VARCHAR},
       </if>
@@ -109,6 +116,9 @@
       <if test="ruleType != null" >
         RULE_TYPE = #{ruleType,jdbcType=VARCHAR},
       </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=VARCHAR},
+      </if>
       <if test="ruleName != null" >
         RULE_NAME = #{ruleName,jdbcType=VARCHAR},
       </if>
@@ -136,6 +146,7 @@
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.wchwu.model.busin.RuleRegPo" >
     update rule_reg
     set RULE_TYPE = #{ruleType,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
       RULE_NAME = #{ruleName,jdbcType=VARCHAR},
       RULE_URL = #{ruleUrl,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=DATE},
@@ -148,6 +159,7 @@
   <update id="updateByPrimaryKey" parameterType="cn.wchwu.model.busin.RuleRegPo" >
     update rule_reg
     set RULE_TYPE = #{ruleType,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=VARCHAR},
       RULE_NAME = #{ruleName,jdbcType=VARCHAR},
       RULE_URL = #{ruleUrl,jdbcType=VARCHAR},
       CREATE_TIME = #{createTime,jdbcType=DATE},
@@ -157,31 +169,41 @@
     where ID = #{id,jdbcType=INTEGER}
   </update>
   
-  <select id="queryList" parameterType="cn.wchwu.model.busin.RuleRegPo" resultMap="BaseResultMap">
+  <select id="queryList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
   	select 
     <include refid="Base_Column_List" />
     from rule_reg
     where 1=1
-    <if test="record.ruleType != null" >
+    <if test="record.ruleType != null and record.ruleType != ''" >
       and RULE_TYPE = #{record.ruleType,jdbcType=VARCHAR}
     </if>
-    <if test="record.ruleName != null" >
-      and RULE_NAME = #{record.ruleName,jdbcType=VARCHAR}
+    <if test="record.status != null and record.status != ''" >
+      and STATUS = #{record.status,jdbcType=VARCHAR}
     </if>
-    <if test="record.ruleUrl != null" >
+    <if test="record.ruleName != null and record.ruleName != ''" >
+      and RULE_NAME like concat('%',#{record.ruleName,jdbcType=VARCHAR},'%')  
+    </if>
+    <if test="record.ruleUrl != null and record.ruleUrl != ''" >
       and RULE_URL = #{record.ruleUrl,jdbcType=VARCHAR}
     </if>
-    <if test="record.createTime != null" >
-      and CREATE_TIME = #{record.createTime,jdbcType=DATE}
+    <if test="record.createTimeBegin != null and record.createTimeBegin != ''" >
+      and CREATE_TIME <![CDATA[ >= ]]> STR_TO_DATE(#{record.createTimeBegin,jdbcType=VARCHAR},"%Y-%m-%d")
     </if>
-    <if test="record.creator != null" >
+    <if test="record.createTimeEnd != null and record.createTimeEnd != ''" >
+      and CREATE_TIME <![CDATA[ <= ]]> STR_TO_DATE(#{record.createTimeEnd,jdbcType=VARCHAR},"%Y-%m-%d")
+    </if>
+    <if test="record.creator != null and record.creator != ''" >
       and CREATOR = #{record.creator,jdbcType=VARCHAR}
     </if>
-    <if test="record.updateTime != null" >
+    <if test="record.updateTime != null and record.updateTime != ''" >
       and UPDATE_TIME = #{record.updateTime,jdbcType=DATE}
     </if>
-    <if test="record.updater != null" >
+    <if test="record.updater != null and record.updater != ''" >
       and UPDATER = #{record.updater,jdbcType=VARCHAR}
     </if>
+  </select>
+  
+  <select id="getRuleId" resultType="int">
+  	select func_nextval('SEQ_RULE')
   </select>
 </mapper>

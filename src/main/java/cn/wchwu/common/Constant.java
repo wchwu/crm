@@ -29,4 +29,27 @@ public class Constant {
      * DB_NAME_DEDAULT:默认DB 名称
      */
     public static final String DB_NAME_DEDAULT = "default";
+
+    /**
+     * FILE_STATUS_DEL:文件状态-删除
+     */
+    public static final String FILE_STATUS_DEL = "0";
+    /**
+     * FILE_STATUS_OK:FILE_STATUS_DEL:文件状态-正常
+     */
+    public static final String FILE_STATUS_OK = "1";
+
+    /**
+     * FILE_TYPE_MEMBER:文件类型-简历相关
+     */
+    public static final String FILE_TYPE_MEMBER = "10";
+    /**
+     * FILE_TYPE_RULE:规章制度相关
+     */
+    public static final String FILE_TYPE_RULE = "60";
+
+    public static final String RULE_STATUS_DEL = "0";
+
+    public static final String RULE_STATUS_OK = "1";
+
 }

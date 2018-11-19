@@ -60,8 +60,6 @@
 						<th data-options="field:'certId', width: '5%'" class="text-align:center">证件号码</th>
 						<th data-options="field:'genderName', width: '3%'" class="text-align:center">性别</th>
 						<th data-options="field:'nationName', width: '5%'">民族</th>
-						<th data-options="field:'deptName', width: '5%'">部门</th>
-						<th data-options="field:'office', width: '5%'">职务</th>
 						<th data-options="field:'degree', width: '5%'">学历</th>
 						<th data-options="field:'marriageName', width: '5%'">婚姻</th>
 						<th data-options="field:'polityName', width: '5%'">政治面貌</th>
@@ -86,7 +84,6 @@
 <div id="adjScore"></div>  
 
 <script type="text/javascript">
-	//url : SYS.contextPath + '/pages/scoreAct/adjScoretouser.jsp?custid=' + rows[0].custid,
 	$(function() {
 		$('#tb-member').datagrid({
 			toolbar: [{

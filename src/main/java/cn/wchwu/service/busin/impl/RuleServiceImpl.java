@@ -16,6 +16,7 @@ import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.model.busin.RuleRegPo;
 import cn.wchwu.service.busin.RuleService;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.Mapper;
@@ -34,8 +35,8 @@ public class RuleServiceImpl extends BaseService<RuleRegPo> implements RuleServi
     private RuleRegPoMapper ruleRegPoMapper;
 
     @Override
-    public List<RuleRegPo> queryList(PageCond pageCond, RuleRegPo record) {
-        return ruleRegPoMapper.queryList(pageCond, record);
+    public List<RuleRegPo> queryList(PageCond pageCond, Map<String, String> params) {
+        return ruleRegPoMapper.queryList(pageCond, params);
     }
 
     @SuppressWarnings("unchecked")
@@ -43,4 +44,25 @@ public class RuleServiceImpl extends BaseService<RuleRegPo> implements RuleServi
     public Mapper<RuleRegPo> getMapper() {
         return (Mapper<RuleRegPo>) ruleRegPoMapper;
     }
+
+    @Override
+    public int getRuleId() {
+        return ruleRegPoMapper.getRuleId();
+    }
+
+    @Override
+    public RuleRegPo queryById(Integer id) {
+        return ruleRegPoMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public int insertRule(RuleRegPo record) {
+        return ruleRegPoMapper.insertSelective(record);
+    }
+
+    @Override
+    public int updateRule(RuleRegPo record) {
+        return ruleRegPoMapper.updateByPrimaryKeySelective(record);
+    }
+
 }

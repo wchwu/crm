@@ -74,6 +74,10 @@ public class MemberPo implements Serializable {
 
     private Date updateTime;
 
+    private String creator;
+
+    private String updater;
+
     public Integer getId() {
         return id;
     }
@@ -328,5 +332,21 @@ public class MemberPo implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator == null ? null : creator.trim();
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater == null ? null : updater.trim();
     }
 }

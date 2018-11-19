@@ -3,6 +3,7 @@ package cn.wchwu.dao.busin;
 import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.model.busin.RuleRegPo;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 public interface RuleRegPoMapper {
@@ -20,5 +21,7 @@ public interface RuleRegPoMapper {
 
     int updateByPrimaryKey(RuleRegPo record);
 
-    List<RuleRegPo> queryList(@Param("PAGE") PageCond pageCond, @Param("record") RuleRegPo record);
+    List<RuleRegPo> queryList(@Param("PAGE") PageCond pageCond, @Param("record") Map<String, String> record);
+
+    int getRuleId();
 }

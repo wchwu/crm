@@ -1,6 +1,7 @@
 
 package cn.wchwu.service.busin.impl;
 
+import cn.wchwu.common.Constant;
 import cn.wchwu.dao.busin.FileRecPoMapper;
 import cn.wchwu.model.busin.FileRecPo;
 import cn.wchwu.service.busin.FileRecService;
@@ -24,8 +25,8 @@ public class FileRecServiceImpl extends BaseService<FileRecPo> implements FileRe
     private FileRecPoMapper fileRecPoMapper;
 
     @Override
-    public List<FileRecPo> queryListById(Integer memberId) {
-        return fileRecPoMapper.queryListById(memberId);
+    public List<FileRecPo> queryListByMemberId(Integer memberId) {
+        return fileRecPoMapper.queryListByMemberId(memberId);
 
     }
 
@@ -88,12 +89,21 @@ public class FileRecServiceImpl extends BaseService<FileRecPo> implements FileRe
 
     @Override
     public int deleteFileRec(Integer id) {
-        return fileRecPoMapper.deleteFileRec(id);
+        FileRecPo record = new FileRecPo();
+        record.setId(id);
+        record.setStatus(Constant.FILE_STATUS_DEL);
+
+        return fileRecPoMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override
     public FileRecPo queryById(Integer id) {
         return fileRecPoMapper.queryById(id);
+    }
+
+    @Override
+    public List<FileRecPo> queryListByRuleId(Integer ruleId) {
+        return fileRecPoMapper.queryListByRuleId(ruleId);
     }
 
 }

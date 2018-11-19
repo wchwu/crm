@@ -93,3 +93,20 @@ function getMemberId(){
 	});
 	return memberId ;
 }
+
+
+function getRuleId(){
+	var ruleId = 0;
+	$.ajax({
+		type : 'GET',
+		url : SYS.contextPath + '/rule/getRuleId.action',
+		dataType : 'json',
+		async : false,
+		success : function(data) {
+			if(data.success == '0'){
+				ruleId = data.ruleId;
+			}
+		}
+	});
+	return ruleId ;
+}

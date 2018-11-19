@@ -20,13 +20,17 @@ public class CertificatePo implements Serializable {
 
     private Date updateTime;
 
-    public String getGainDate() {
-        return gainDate;
-    }
+    private String creator;
+
+    private String updater;
 
     private Integer id;
 
     private Integer memberId;
+
+    public String getGainDate() {
+        return gainDate;
+    }
 
     public Integer getId() {
         return id;
@@ -78,5 +82,21 @@ public class CertificatePo implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator == null ? null : creator.trim();
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater == null ? null : updater.trim();
     }
 }

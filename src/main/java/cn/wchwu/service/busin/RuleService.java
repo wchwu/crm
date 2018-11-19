@@ -14,6 +14,7 @@ package cn.wchwu.service.busin;
 import cn.wchwu.framework.mybatis.bean.PageCond;
 import cn.wchwu.model.busin.RuleRegPo;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:规章制度service
@@ -32,6 +33,14 @@ public interface RuleService extends IService<RuleRegPo> {
      * @author Chaowu.Wang
      * @date 2018年11月19日 上午12:13:59
      */
-    public List<RuleRegPo> queryList(PageCond pageCond, RuleRegPo record);
+    List<RuleRegPo> queryList(PageCond pageCond, Map<String, String> params);
+
+    int getRuleId();
+
+    RuleRegPo queryById(Integer id);
+
+    int insertRule(RuleRegPo record);
+
+    int updateRule(RuleRegPo record);
 
 }

@@ -11,8 +11,6 @@
     <result column="GENDER" property="gender" jdbcType="VARCHAR" />
     <result column="NATION" property="nation" jdbcType="VARCHAR" />
     <result column="DEGREE" property="degree" jdbcType="VARCHAR" />
-    <result column="DEPT" property="dept" jdbcType="VARCHAR" />
-    <result column="OFFICE" property="office" jdbcType="VARCHAR" />
     <result column="MARRIAGE" property="marriage" jdbcType="VARCHAR" />
     <result column="POLITY" property="polity" jdbcType="VARCHAR" />
     <result column="TEL" property="tel" jdbcType="VARCHAR" />
@@ -30,16 +28,21 @@
     <result column="INTENT_DEPT2" property="intentDept2" jdbcType="VARCHAR" />
     <result column="JOIN_REASON" property="joinReason" jdbcType="VARCHAR" />
     <result column="WANT_GAIN" property="wantGain" jdbcType="VARCHAR" />
-    <result column="JOIN_DATE" property="joinDate" jdbcType="VARCHAR" />
     <result column="RESUME_PATH" property="resumePath" jdbcType="VARCHAR" />
-    <result column="CREATE_TIME" property="createTime" jdbcType="DATE" />
-    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE" />
+    <result column="JOIN_DATE" property="joinDate" jdbcType="VARCHAR" />
+    <result column="DEPT" property="dept" jdbcType="VARCHAR" />
+    <result column="OFFICE" property="office" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="CREATOR" property="creator" jdbcType="VARCHAR" />
+    <result column="UPDATER" property="updater" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    ID, TYPE, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEGREE, DEPT, OFFICE, 
-    MARRIAGE, POLITY, TEL, ADDRESS, COMPANY_ADDR, EMAIL, STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
+    ID, TYPE, OPERATOR_ID, CERT_ID, NAME, OTHER_NAME, GENDER, NATION, DEGREE, MARRIAGE, 
+    POLITY, TEL, ADDRESS, COMPANY_ADDR, EMAIL, STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
     HEALTH_STATUS, BIRTH_DATE, HOBBY, ADVANTAGE, INTENT_DEPT, INTENT_DEPT2, JOIN_REASON, 
-    WANT_GAIN, JOIN_DATE, RESUME_PATH, CREATE_TIME, UPDATE_TIME
+    WANT_GAIN, RESUME_PATH, JOIN_DATE, DEPT, OFFICE, CREATE_TIME, UPDATE_TIME, CREATOR, 
+    UPDATER
   </sql>
   <select id="getMemberId" resultType="int">
   	select func_nextval('SEQ_MEMBER') 
@@ -58,25 +61,27 @@
     insert into member (ID, TYPE, OPERATOR_ID, 
       CERT_ID, NAME, OTHER_NAME, 
       GENDER, NATION, DEGREE, 
-      DEPT, OFFICE, MARRIAGE, 
-      POLITY, TEL, ADDRESS, 
-      COMPANY_ADDR, EMAIL, STATUS, 
-      ORIGINAL_PLACE, NATIVE_PLACE, HEALTH_STATUS, 
-      BIRTH_DATE, HOBBY, ADVANTAGE, 
-      INTENT_DEPT, INTENT_DEPT2, JOIN_REASON, 
-      WANT_GAIN, JOIN_DATE, RESUME_PATH, 
-      CREATE_TIME, UPDATE_TIME)
+      MARRIAGE, POLITY, TEL, 
+      ADDRESS, COMPANY_ADDR, EMAIL, 
+      STATUS, ORIGINAL_PLACE, NATIVE_PLACE, 
+      HEALTH_STATUS, BIRTH_DATE, HOBBY, 
+      ADVANTAGE, INTENT_DEPT, INTENT_DEPT2, 
+      JOIN_REASON, WANT_GAIN, RESUME_PATH, 
+      JOIN_DATE, DEPT, OFFICE, 
+      CREATE_TIME, UPDATE_TIME, CREATOR, 
+      UPDATER)
     values (#{id,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{operatorId,jdbcType=INTEGER}, 
       #{certId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{otherName,jdbcType=VARCHAR}, 
       #{gender,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{degree,jdbcType=VARCHAR}, 
-      #{dept,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, #{marriage,jdbcType=VARCHAR}, 
-      #{polity,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{companyAddr,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
-      #{originalPlace,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, #{healthStatus,jdbcType=VARCHAR}, 
-      #{birthDate,jdbcType=VARCHAR}, #{hobby,jdbcType=VARCHAR}, #{advantage,jdbcType=VARCHAR}, 
-      #{intentDept,jdbcType=VARCHAR}, #{intentDept2,jdbcType=VARCHAR}, #{joinReason,jdbcType=VARCHAR}, 
-      #{wantGain,jdbcType=VARCHAR}, #{joinDate,jdbcType=VARCHAR}, #{resumePath,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE})
+      #{marriage,jdbcType=VARCHAR}, #{polity,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{companyAddr,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{status,jdbcType=VARCHAR}, #{originalPlace,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, 
+      #{healthStatus,jdbcType=VARCHAR}, #{birthDate,jdbcType=VARCHAR}, #{hobby,jdbcType=VARCHAR}, 
+      #{advantage,jdbcType=VARCHAR}, #{intentDept,jdbcType=VARCHAR}, #{intentDept2,jdbcType=VARCHAR}, 
+      #{joinReason,jdbcType=VARCHAR}, #{wantGain,jdbcType=VARCHAR}, #{resumePath,jdbcType=VARCHAR}, 
+      #{joinDate,jdbcType=VARCHAR}, #{dept,jdbcType=VARCHAR}, #{office,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.wchwu.model.busin.MemberPo" >
     insert into member
@@ -107,12 +112,6 @@
       </if>
       <if test="degree != null" >
         DEGREE,
-      </if>
-      <if test="dept != null" >
-        DEPT,
-      </if>
-      <if test="office != null" >
-        OFFICE,
       </if>
       <if test="marriage != null" >
         MARRIAGE,
@@ -165,17 +164,29 @@
       <if test="wantGain != null" >
         WANT_GAIN,
       </if>
+      <if test="resumePath != null" >
+        RESUME_PATH,
+      </if>
       <if test="joinDate != null" >
         JOIN_DATE,
       </if>
-      <if test="resumePath != null" >
-        RESUME_PATH,
+      <if test="dept != null" >
+        DEPT,
+      </if>
+      <if test="office != null" >
+        OFFICE,
       </if>
       <if test="createTime != null" >
         CREATE_TIME,
       </if>
       <if test="updateTime != null" >
         UPDATE_TIME,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="updater != null" >
+        UPDATER,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -205,12 +216,6 @@
       </if>
       <if test="degree != null" >
         #{degree,jdbcType=VARCHAR},
-      </if>
-      <if test="dept != null" >
-        #{dept,jdbcType=VARCHAR},
-      </if>
-      <if test="office != null" >
-        #{office,jdbcType=VARCHAR},
       </if>
       <if test="marriage != null" >
         #{marriage,jdbcType=VARCHAR},
@@ -263,17 +268,29 @@
       <if test="wantGain != null" >
         #{wantGain,jdbcType=VARCHAR},
       </if>
-      <if test="joinDate != null" >
-        #{joinDate,jdbcType=VARCHAR},
-      </if>
       <if test="resumePath != null" >
         #{resumePath,jdbcType=VARCHAR},
       </if>
+      <if test="joinDate != null" >
+        #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null" >
+        #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="office != null" >
+        #{office,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
-        #{createTime,jdbcType=DATE},
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        #{updateTime,jdbcType=DATE},
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -303,12 +320,6 @@
       </if>
       <if test="degree != null" >
         DEGREE = #{degree,jdbcType=VARCHAR},
-      </if>
-      <if test="dept != null" >
-        DEPT = #{dept,jdbcType=VARCHAR},
-      </if>
-      <if test="office != null" >
-        OFFICE = #{office,jdbcType=VARCHAR},
       </if>
       <if test="marriage != null" >
         MARRIAGE = #{marriage,jdbcType=VARCHAR},
@@ -361,17 +372,29 @@
       <if test="wantGain != null" >
         WANT_GAIN = #{wantGain,jdbcType=VARCHAR},
       </if>
-      <if test="joinDate != null" >
-        JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
-      </if>
       <if test="resumePath != null" >
         RESUME_PATH = #{resumePath,jdbcType=VARCHAR},
       </if>
+      <if test="joinDate != null" >
+        JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="dept != null" >
+        DEPT = #{dept,jdbcType=VARCHAR},
+      </if>
+      <if test="office != null" >
+        OFFICE = #{office,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null" >
-        CREATE_TIME = #{createTime,jdbcType=DATE},
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateTime != null" >
-        UPDATE_TIME = #{updateTime,jdbcType=DATE},
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        UPDATER = #{updater,jdbcType=VARCHAR},
       </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
@@ -387,8 +410,6 @@
       GENDER = #{gender,jdbcType=VARCHAR},
       NATION = #{nation,jdbcType=VARCHAR},
       DEGREE = #{degree,jdbcType=VARCHAR},
-      DEPT = #{dept,jdbcType=VARCHAR},
-      OFFICE = #{office,jdbcType=VARCHAR},
       MARRIAGE = #{marriage,jdbcType=VARCHAR},
       POLITY = #{polity,jdbcType=VARCHAR},
       TEL = #{tel,jdbcType=VARCHAR},
@@ -406,10 +427,14 @@
       INTENT_DEPT2 = #{intentDept2,jdbcType=VARCHAR},
       JOIN_REASON = #{joinReason,jdbcType=VARCHAR},
       WANT_GAIN = #{wantGain,jdbcType=VARCHAR},
-      JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
       RESUME_PATH = #{resumePath,jdbcType=VARCHAR},
-      CREATE_TIME = #{createTime,jdbcType=DATE},
-      UPDATE_TIME = #{updateTime,jdbcType=DATE}
+      JOIN_DATE = #{joinDate,jdbcType=VARCHAR},
+      DEPT = #{dept,jdbcType=VARCHAR},
+      OFFICE = #{office,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      UPDATER = #{updater,jdbcType=VARCHAR}
     where ID = #{id,jdbcType=INTEGER}
   </update>
   
@@ -500,10 +525,10 @@
         and RESUME_PATH = #{record.resumePath,jdbcType=VARCHAR}
       </if>
       <if test="record.createTime != null">
-        and CREATE_TIME = #{record.createTime,jdbcType=DATE}
+        and CREATE_TIME = #{record.createTime,jdbcType=TIMESTAMP}
       </if>
       <if test="record.updateTime != null">
-        and UPDATE_TIME = #{record.updateTime,jdbcType=DATE}
+        and UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
       </if>
   </select>
   

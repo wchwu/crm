@@ -18,7 +18,9 @@ public interface FileRecPoMapper {
 
     int updateByPrimaryKey(FileRecPo record);
 
-    List<FileRecPo> queryListById(Integer id);
+    List<FileRecPo> queryListByMemberId(Integer memberId);
+
+    List<FileRecPo> queryListByRuleId(Integer ruleId);
 
     int deleteFileRec(Integer id);
 

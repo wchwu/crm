@@ -13,25 +13,27 @@
 				<table class="table" style="width: 100%;">
 					<tbody>
 						<tr>
-							<th>姓名</th>
+							<th>制度类型</th>
 							<td>
-								<input class="easyui-validatebox" name="rule.name" />
+								<select id="ruleType" name="rule.ruleType" class="easyui-combobox" data-options="dictTypeId: 'RULE_TYPE',required:false">
+								</select>
 							</td>
-							<th>身份证号</th>
-							<td><input class="easyui-validatebox" name="rule.certId" /></td>
+							<th>制度名称</th>
+							<td><input class="easyui-validatebox" name="rule.ruleName" id="ruleName"/></td>
 						</tr>
 						<tr>
-							<th>电话</th>
-							<td><input class="easyui-validatebox" name="rule.tel" /></td>
-							<th>状态</th>
+							<th>创建人</th>
+							<td><input class="easyui-validatebox" name="rule.creator" id="creator"/></td>
+							<th>创建时间</th>
 							<td>
-								<select id="status" name="member.status" class="easyui-combobox" data-options="dictTypeId: 'STATUS',required:false,defaultIndex: 0">
-								</select>  
+								<input id="createTimeBegin"  type="text" class="easyui-datebox">
+								~
+								<input id="createTimeEnd"  type="text" class="easyui-datebox">
 							</td>
 						</tr>
 						<tr>
 							<th colspan="4" style="text-align: center;">
-								<a class="easyui-linkbutton l-btn" id="a_search" onclick="$('#tb-rule').datagrid('load', SYS.serializeObject($('#searchForm')));"> 查 找 </a>
+								<a class="easyui-linkbutton l-btn" id="a_search" onclick="queryAjax();"> 查 找 </a>
 								<a class="easyui-linkbutton l-btn" onclick="$('#searchForm').form('clear');"> 清 空 </a>
 							</th>
 						</tr>
@@ -67,10 +69,19 @@
 			</table> 
 		</div>
 	</div> 
-<div id="adjScore"></div>  
 
 <script type="text/javascript">
-	//url : SYS.contextPath + '/pages/scoreAct/adjScoretouser.jsp?custid=' + rows[0].custid,
+function queryAjax(){
+	var queryParams = new Object() ;
+	queryParams.ruleType = $('#ruleType').combobox('getValue');
+	queryParams.ruleName = $('#ruleName').val();
+	queryParams.creator = $('#creator').val();
+	queryParams.createTimeBegin = $('#createTimeBegin').datebox('getValue');
+	queryParams.createTimeEnd = $('#createTimeEnd').datebox('getValue');
+  	
+	$('#tb-rule').datagrid('load', queryParams);
+}
+
 	$(function() {
 		$('#tb-rule').datagrid({
 			toolbar: [{
@@ -78,13 +89,13 @@
 				text: '查看',
 				iconCls: 'icon-search',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked');
+					var rows = $('#tb-rule').datagrid('getChecked');
 					if (rows.length != 1) {
 						$.messager.alert('提示', '请选择一行进行查看！', 'warning');
 					} else {
 						top.SYS.modalDialog({
-							title : '查看成员',
-							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=detail&id=' + rows[0].id ,
+							title : '查看规章制度',
+							url : SYS.contextPath + '/pages/busin/rule/ruleInput.jsp?op=detail&id=' + rows[0].id ,
 							resizable : true,
 							width: '80%',
 							height: '80%',
@@ -93,46 +104,46 @@
 					}
 				}
 			},{
-				id: 'addMember',
+				id: 'addRule',
 				text: '新增',
 				iconCls: 'icon-add',
 				handler: function() {
 					top.SYS.modalDialog({
-						title : '新增成员',
-						url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=add&op=add',
+						title : '新增规章制度',
+						url : SYS.contextPath + '/pages/busin/rule/ruleInput.jsp?op=add&op=add',
 						resizable : true,
 						width: '80%',
 						height: '80%',
-						ctlDom: $('#tb-member')
+						ctlDom: $('#tb-rule')
 					});
 				}
 			},
 			{
-				id: 'updateMember',
-				text: '修改',
+				id: 'updateRule',
+				text: '修改规章制度',
 				iconCls: 'icon-edit',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked');
+					var rows = $('#tb-rule').datagrid('getChecked');
 					if (rows.length != 1) {
 						$.messager.alert('提示', '请选择一行进行修改！', 'warning');
 					} else {
 						top.SYS.modalDialog({
 							title : '编辑成员信息',
-							url : SYS.contextPath + '/pages/busin/member/memberInput.jsp?op=edit&id=' + rows[0].id,
+							url : SYS.contextPath + '/pages/busin/rule/ruleInput.jsp?op=edit&id=' + rows[0].id,
 							resizable : true,
 							width: '80%',
 							height: '80%',
-							ctlDom: $('#tb-member')
+							ctlDom: $('#tb-rule')
 						});
 					}
 				}
 			},
 			{
-				id: 'deleteMember',
+				id: 'deleteRule',
 				text: '删除',
 				iconCls: 'icon-remove',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked'),
+					var rows = $('#tb-rule').datagrid('getChecked'),
 						row_len = rows.length;
 					
 					if (row_len < 1) {
@@ -151,9 +162,8 @@
 								}
 								
 								for (var i in idArr) data.push({ name: 'ids', value: idArr[i] });
-								console.log(data);
 							    $.ajax({
-							       url: SYS.contextPath + "/member/del.action",
+							       url: SYS.contextPath + "/rule/delRule.action",
 							       data: data,
 							       dataType: "json",
 							       traditional: true,
@@ -161,7 +171,7 @@
 										if (data.success == "0") {
 											$.messager.show({title: "提示", msg: "操作成功" });
 											//$('#tb-member').datagrid('reload');
-											$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
+											$('#tb-rule').datagrid('reload', SYS.serializeObject($('#searchForm')));
 										} else {
 											top.$.messager.alert('提示', data.errorMsg, 'error');
 										}

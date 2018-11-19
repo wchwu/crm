@@ -31,7 +31,17 @@ public interface FileRecService extends IService<FileRecPo> {
      * @author Chaowu.Wang
      * @date 2018年10月21日 下午11:51:09
      */
-    public List<FileRecPo> queryListById(Integer memberId);
+    public List<FileRecPo> queryListByMemberId(Integer memberId);
+
+    /**
+     * queryListByRuleId:查询制度文件
+     * 
+     * @param ruleId
+     * @return
+     * @author Chaowu.Wang
+     * @date 2018年11月19日 下午2:39:21
+     */
+    public List<FileRecPo> queryListByRuleId(Integer ruleId);
 
     /**
      * saveFileBatch:保存文件记录
