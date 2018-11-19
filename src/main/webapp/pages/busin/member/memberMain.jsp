@@ -198,7 +198,7 @@
 						$.messager.confirm('确认', '你确定要修改这[' + row_len +  ']条数据吗？', function(r) {
 							if (r) {
 								//定义变量，接收参数
-								var data = {"type":"2"},
+								var data = {},
 									idArr = [],
 									row;
 								while (row_len--) {
@@ -207,11 +207,11 @@
 								}
 								var ids = '';
 								for (var i in idArr){
-									data.push({ name: 'ids', value: idArr[i] });
 									ids = idArr[i] + ',';
 								} 
-								ids = ids.substring(0,ids.length);
+								ids = ids.substring(0,ids.length-1);
 								data.type = '2' ;
+								data.ids = ids ;
 							    $.ajax({
 							       url: SYS.contextPath + "/member/updateMemberBatch.action",
 							       data: data,

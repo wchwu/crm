@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import tk.mybatis.mapper.util.StringUtil;
 
 /**
  * @description:成员controller
@@ -135,6 +136,9 @@ public class MemberController {
         if (null != idsArr && idsArr.length > 0) {
             for (int i = 0; i < idsArr.length; i++) {
                 MemberPo member = new MemberPo();
+                if (StringUtil.isEmpty(idsArr[i])) {
+                    continue;
+                }
                 member.setId(Integer.valueOf(idsArr[i]));
                 member.setType(type);
                 ret += memberService.update(member);

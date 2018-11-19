@@ -103,10 +103,10 @@ public class FileController {
 
                         String filePath = "";
                         if (Constant.FILE_TYPE_MEMBER.equals(fe.getFileType())) {// 人员相关附件
-                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + memberId + File.separator + fe.getFileName();
+                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + memberId;
                             fe.setMemberId(Integer.valueOf(memberId));
                         } else if (Constant.FILE_TYPE_RULE.equals(fe.getFileType())) {// 规则相关附件
-                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + ruleId + File.separator + fe.getFileName();
+                            filePath = uploadRootPath + File.separator + fe.getFileType() + File.separator + ruleId;
                             fe.setRuleId(Integer.valueOf(ruleId));
                         }
                         File f = new File(filePath);

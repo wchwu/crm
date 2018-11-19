@@ -9,7 +9,7 @@
 <body>
 <div class="easyui-layout" data-options="fit:true, border:false">  
 		<div data-options="region:'north',title:'查询', border:false" style="height: 100px; background: #F4F4F4;overflow: hidden;">
-			<form id="searchForm" class="form" onkeydown="if (event.keyCode == 13) { $('#a_search').click();}">
+			<form id="searchForm2" class="form" onkeydown="if (event.keyCode == 13) { $('#a_search').click();}">
 				<table class="table" style="width: 100%;">
 					<tbody>
 						<tr>
@@ -31,7 +31,7 @@
 						</tr>
 						<tr>
 							<th colspan="4" style="text-align: center;">
-								<a class="easyui-linkbutton l-btn" id="a_search" onclick="$('#tb-member').datagrid('load', SYS.serializeObject($('#searchForm')));"> 查 找 </a>
+								<a class="easyui-linkbutton l-btn" id="a_search" onclick="$('#tb-member2').datagrid('load', SYS.serializeObject($('#searchForm2')));"> 查 找 </a>
 								<a class="easyui-linkbutton l-btn" onclick="$('#searchForm').form('clear');"> 清 空 </a>
 							</th>
 						</tr>
@@ -41,7 +41,7 @@
 		</div>
 		<!-- 成员信息列表-->
 		<div data-options="region:'center',split:false">
-			<table id="tb-member"  data-options="
+			<table id="tb-member2"  data-options="
 				url: SYS.contextPath + '/member/memberList.action?member.type=2',
 				view: SYS.datagrid.view,
 				emptyMsg: '没有数据',
@@ -88,13 +88,13 @@
 <script type="text/javascript">
 	//url : SYS.contextPath + '/pages/scoreAct/adjScoretouser.jsp?custid=' + rows[0].custid,
 	$(function() {
-		$('#tb-member').datagrid({
+		$('#tb-member2').datagrid({
 			toolbar: [{
-				id: 'detail',
+				id: 'detail2',
 				text: '查看',
 				iconCls: 'icon-search',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked');
+					var rows = $('#tb-member2').datagrid('getChecked');
 					if (rows.length != 1) {
 						$.messager.alert('提示', '请选择一行进行查看！', 'warning');
 					} else {
@@ -104,12 +104,12 @@
 							resizable : true,
 							width: '80%',
 							height: '80%',
-							ctlDom: $('#tb-member')
+							ctlDom: $('#tb-member2')
 						});
 					}
 				}
 			},{
-				id: 'addMember',
+				id: 'addMember2',
 				text: '新增',
 				iconCls: 'icon-add',
 				handler: function() {
@@ -119,16 +119,16 @@
 						resizable : true,
 						width: '80%',
 						height: '80%',
-						ctlDom: $('#tb-member')
+						ctlDom: $('#tb-member2')
 					});
 				}
 			},
 			{
-				id: 'updateMember',
+				id: 'updateMember2',
 				text: '修改',
 				iconCls: 'icon-edit',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked');
+					var rows = $('#tb-member2').datagrid('getChecked');
 					if (rows.length != 1) {
 						$.messager.alert('提示', '请选择一行进行修改！', 'warning');
 					} else {
@@ -138,17 +138,17 @@
 							resizable : true,
 							width: '80%',
 							height: '80%',
-							ctlDom: $('#tb-member')
+							ctlDom: $('#tb-member2')
 						});
 					}
 				}
 			},
 			{
-				id: 'deleteMember',
+				id: 'deleteMember2',
 				text: '删除',
 				iconCls: 'icon-remove',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked'),
+					var rows = $('#tb-member2').datagrid('getChecked'),
 					row_len = rows.length;
 				if (rows.length != 1) {
 					$.messager.alert('提示', '请选择一行进行修改！', 'warning');
@@ -179,7 +179,7 @@
 									if (data.success == "0") {
 										$.messager.show({title: "提示", msg: "操作成功" });
 										//$('#tb-member').datagrid('reload');
-										$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
+										$('#tb-member2').datagrid('reload', SYS.serializeObject($('#searchForm2')));
 									} else {
 										top.$.messager.alert('提示', data.errorMsg, 'error');
 									}
@@ -194,7 +194,7 @@
 				text: '转为志愿者',
 				iconCls: 'icon-redo',
 				handler: function() {
-					var rows = $('#tb-member').datagrid('getChecked'),
+					var rows = $('#tb-member2').datagrid('getChecked'),
 						row_len = rows.length;
 					if (rows.length != 1) {
 						$.messager.alert('提示', '请选择一行进行修改！', 'warning');
@@ -202,7 +202,7 @@
 						$.messager.confirm('确认', '你确定要修改这[' + row_len +  ']条数据吗？', function(r) {
 							if (r) {
 								//定义变量，接收参数
-								var data = {"type":"2"},
+								var data = {},
 									idArr = [],
 									row;
 								while (row_len--) {
@@ -211,11 +211,11 @@
 								}
 								var ids = '';
 								for (var i in idArr){
-									data.push({ name: 'ids', value: idArr[i] });
 									ids = idArr[i] + ',';
 								} 
-								ids = ids.substring(0,ids.length);
+								ids = ids.substring(0,ids.length-1);
 								data.type = '1' ;
+								data.ids = ids ;
 							    $.ajax({
 							       url: SYS.contextPath + "/member/updateMemberBatch.action",
 							       data: data,
@@ -225,21 +225,13 @@
 										if (data.success == "0") {
 											$.messager.show({title: "提示", msg: "操作成功" });
 											//$('#tb-member').datagrid('reload');
-											$('#tb-member').datagrid('reload', SYS.serializeObject($('#searchForm')));
+											$('#tb-member2').datagrid('reload', SYS.serializeObject($('#searchForm2')));
 										} else {
 											top.$.messager.alert('提示', data.errorMsg, 'error');
 										}
 									}
 							    });
 							}
-						});
-						top.SYS.modalDialog({
-							title : '转换信息',
-							url : SYS.contextPath + '/pages/busin/member/updateMember.action?member.type=1&id=' + rows[0].id,
-							resizable : true,
-							width: '80%',
-							height: '80%',
-							ctlDom: $('#tb-member')
 						});
 					}
 				}
